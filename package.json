@@ -1,0 +1,20 @@
+{
+  "name": "JQLClassFree",
+  "version": "1.0.1",
+  "devDependencies": {
+    "esbuild": "^0.17.5"
+  },
+  "type": "module",
+  "author": "KooiInc",
+  "description": "JQL classfree object oriented (non prototypal) version",
+  "keywords": [
+    "JQuery",
+    "JQuerySubset",
+    "JQueryAlike",
+    "ES20xx"
+  ],
+  "license": "GNU General Public License v3.0",
+  "scripts": {
+    "build": "node build"
+  }
+}
