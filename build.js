@@ -13,7 +13,7 @@ const esContext = {
 };
 
 const plugins = [{
-  name: 'grrr',
+  name: 'pluggedin',
   setup(build) {
     let count = 0;
     build.onEnd(result => {
