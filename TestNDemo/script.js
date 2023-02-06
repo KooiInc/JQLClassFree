@@ -1,6 +1,5 @@
 // uncomment for bundle
-// import $ from "/JQL/lib/JQLBundle.js";
-import jql from "../bundle/jql.min.js";
+import jql from "../Bundle/jql.min.js";
 const {$, $$: virtual, log, debugLog, setSystemLogActiveState} = jql;
 
 // initialize popup
