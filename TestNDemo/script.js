@@ -110,7 +110,8 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
       .on(`click`, () => {
           popup.create( $(`
           <p>
-            The repository can be found  @${createExternalLink(`https://github.com/KooiInc/JQL`, `github.com/KooiInc/JQL`).outerHtml()}<br>
+            The repository can be found  @${createExternalLink(`https://github.com/KooiInc/JQLClassFree`,
+                                                               `github.com/KooiInc/JQLClassFree`).outerHtml()}<br>
             The documentation resides @${createExternalLink(apiLinkPrefix, `kooiinc.github.io/JQLDoc`).outerHtml()}
           </p>`));
         }
