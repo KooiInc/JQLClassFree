@@ -1,7 +1,8 @@
 /*
-  This is a classfree object oriented version of JQL
-  see https://github.com/KooiInc/JQL
-  nou fijn
+  This is a classfree object oriented version of JQL:
+    see https://github.com/KooiInc/JQL
+  Inspired by Douglas Crockford:
+    see https://youtu.be/XFTOG895C7c?t=2562
 */
 
 /* region imports */
