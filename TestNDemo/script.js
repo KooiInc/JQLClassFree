@@ -1,6 +1,6 @@
-// uncomment for bundle
-import jql from "../Bundle/jql.min.js";
-const {$, $$: virtual, log, debugLog, setSystemLogActiveState} = jql;
+//import jql from "../Bundle/jql.min.js";
+const {$, $$: virtual, log, debugLog, setSystemLogActiveState} =
+  (await import("../Bundle/jql.min.js")).default;
 
 // initialize popup
 const popup = $.popup();
@@ -100,8 +100,7 @@ $([`<notallowed id="removal_immanent"></notallowed>`,
 // create a few buttons. Some already contain an event handler (delegated)
 const cssPopupBttn = $.virtual(`<button>show popup css</button>`).on(`click`, _ => showStyling(`JQLPopupCSS` ));
 
-const bttnBlock = $(`<p id="bttnblock"></p>`)
-const bttns = [
+const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
     $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
     $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, debugLog.clear),
     $$(`<button id="showComments">Show document comments</button>`).prop(`title`, `Show content of comment elements in a popup`),
@@ -116,8 +115,8 @@ const bttns = [
             The documentation resides @${createExternalLink(apiLinkPrefix, `kooiinc.github.io/JQLDoc`).outerHtml()}
           </p>`));
         }
-      )];
-bttnBlock.append(...bttns).appendTo(JQLRoot);
+      )])
+  .appendTo(JQLRoot);
 
 $(`button`)
   .style({marginRight: `4px`})
@@ -181,32 +180,10 @@ $$(`<div>code used in this example (index.js)</div>`)
   .addClass(`exampleText`, `codeVwr`)
   .appendTo(JQLRoot);
 
-$$(`<div data-forid="html" data-updown="\u25BC View " data-hidden="1">dynamically generated html</div>`)
-  .addClass(`exampleText`, `codeVwr`)
-  .appendTo(JQLRoot);
-
-// get and beautify dynamic html
-const beautyfy = SimplyBeautiful();
-const opts = {
-  indent_size: 2,
-  space_before_conditional: true,
-  jslint_happy: true,
-  max_char: 80,
-  brace_style: `collapse`,
-  indent_scripts: `separate`,
-  unformatted: [], };
-
-$(`#JQLRoot`).append(
-  $$(`<pre class="hljs upDownFader" id="html"><code>${
-    beautyfy.html(JQLRoot.outerHtml(), opts)
-      .replace(/&/g, `&amp;`)
-      .replace(/</g, `&lt;`)}
-   </code></pre>`));
-
 // append actual code to document
-injectCode().then(r => r);
+injectCode().then(_ => Prism.highlightAll());
 
-popup.create(`Page done, enjoy 😎!`);
+popup.createTimed(`Page done, enjoy 😎!`, 2);
 
 function modalDemo() {
   const closeBttn = $$(`<button id="modalCloseTest">Close me</button>`)
@@ -234,9 +211,14 @@ function initStyling() {
     font: `normal 12px/15px verdana, arial`,
     margin: `2rem`,
   });
-  style(`code`, {
+  style(`pre[class*='language-'] {
+    position: relative;
+    display: block;
+  }`)
+  style(`code:not([class*=language-])`, {
     color: `green`,
     fontFamily: `'Courier New', Courier, monospace`,
+    position: `relative`,
   });
   style(`.green`, {
     color: `green`,
@@ -273,26 +255,26 @@ function initStyling() {
     transition: `all 0.7s`,
   });
   style(`#logBttn[data-on='0']:before`, {content: `'Show logs'`}),
-    style(`#logBttn[data-on='1']:before`, {content: `'Hide logs'`}),
-    style(`.upDownFader.down`, {
-      maxHeight: `calc(100% - 1px)`,
-      position: `relative`,
-      width: `811px`,
-      opacity: 1,
-      overflow: `auto`,
-    });
+  style(`#logBttn[data-on='1']:before`, {content: `'Hide logs'`}),
+  style(`.upDownFader.down`, {
+    maxHeight: `calc(100% - 1px)`,
+    position: `relative`,
+    width: `811px`,
+    opacity: 1,
+    overflow: `auto`,
+  });
   style(`b.arrRight {
     vertical-align: baseline;
     font-size: 1.2rem;
   }`)
   style(`.cmmt { color: #888; }`);
-  style(`.cssView { 
-    white-space: pre-wrap; 
+  style(`.cssView {
+    white-space: pre-wrap;
     padding-bottom: 1rem;
     overflow: hidden;
   }`);
-  style(`@media screen and (width < 1400px) { 
-    #bttnblock button { margin-top: 0.4rem; } 
+  style(`@media screen and (width < 1400px) {
+    #bttnblock button { margin-top: 0.4rem; }
   }`);
   style(`.hidden`, {display: `none`});
   style(`b.attention`, {color: `red`, fontSize: `1.2em`});
@@ -366,23 +348,18 @@ function allComments(root, result = []) {
       result.push(`<div class="cmmt">${parentStr}<br>${repeat(`&nbsp;`, 2)}&lt;!--${
         node.textContent.replace(/</, `&lt;`).replace(/\n/g, `<br>${spacing}`)}--&gt;</div>`);
     }
-  };
+  }
 
   return result;
 }
 
-// fetch code and prettify
-// using https://highlightjs.org/
 async function injectCode() {
   const source = await fetch("./script.js").then(r => r.text());
   $(`#JQLRoot`)
     .append( $(`
-    <pre class="hljs upDownFader" id="code">
-      <code>${source.trim()
-      .replace(/&/g, `&amp;`)
-      .replace(/</g, `&lt;`)}</code>
-    </pre>`));
-  hljs.highlightAll();
+    <div class="upDownFader" id="code">
+    <pre class="language-javascript"><code class="language-javascript js line-numbers">${
+      source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`)}</code></pre></div>`));
 }
 
 function showStyling(styleId, bttnHtml) {
@@ -394,7 +371,7 @@ function showStyling(styleId, bttnHtml) {
   const rules = theStyle.first().sheet.cssRules;
   const mapRule = (rule, selector) => `${selector} {\n  ${
     rule.cssText
-      .split(/\{|\}/)[1]
+      .split(/[{}]/)[1]
       .split(`;`)
       .join(`;\n  `)
       .replace(/\s+$/, ``)}\n}`;
@@ -406,7 +383,7 @@ function showStyling(styleId, bttnHtml) {
         .join(``)
         .replace(/{\n/g, `{\n    `)
         .replace(/;\n/g, `;\n    `)
-        .replace(/\n\}/, `\n}`)}\n}`
+        .replace(/\n}/, `\n}`)}\n}`
       : `${mapRule(rule, selectr)}`;
   }
 
