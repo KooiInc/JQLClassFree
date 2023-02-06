@@ -1,4 +1,3 @@
-//import jql from "../Bundle/jql.min.js";
 const {$, $$: virtual, log, debugLog, setSystemLogActiveState} =
   (await import("../Bundle/jql.min.js")).default;
 
