@@ -77,7 +77,7 @@ const staticMethods = {
     return handling(null, type, origin, ...handlers);
   },
 };
-Object.entries(staticMethods).forEach( ([name, method]) => JQL.$[name] = method);
+Object.entries(staticMethods).forEach( ([name, method]) => $[name] = method);
 
 export default JQL;
 /* endregion MAIN */
