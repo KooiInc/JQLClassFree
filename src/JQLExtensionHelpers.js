@@ -4,7 +4,6 @@ import {debugLog, Log, setSystemLogActiveState, systemLog} from "./JQLLog.js";
 import popupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 const styleFactory = (await import("https://kooiinc.github.io/LifeCSS/index.js")).default;
-import $ from "../index.js";
 const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 const exts = allLambdas.instanceExtensions;
 const loops = allLambdas.straigthLoops;

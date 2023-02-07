@@ -1,0 +1,122 @@
+.popupContainer {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  max-width: 40vw;
+  max-height: 40vh;
+  opacity: 0;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: row-reverse;
+}
+~RULE~
+.popupContainer.active {
+  z-index: 10;
+  opacity: 1;
+  resize: vertical;
+}
+~RULE~
+body.popupActive {
+  overflow: hidden;
+  transition: all 0.6s linear 0s;
+}
+~RULE~
+.between {
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
+  background-color: white;
+  width: 0px;
+  height: 0px;
+  opacity: 0;
+}
+~RULE~
+.between.active {
+  height: 100%;
+  width: 100%;
+  z-index: 9;
+  opacity: 0.7;
+  transition: opacity 0.4s ease-in 0s;
+}
+~RULE~
+.popupBox {
+  min-width: 150px;
+  max-width: inherit;
+  max-height: inherit;
+  background-color: white;
+  box-shadow: rgb(119, 119, 119) 3px 2px 12px;
+  border-radius: 6px;
+  overflow: auto;
+  font: 12px / 15px Verdana, Arial, sans-serif;
+  min-height: 1.5rem;
+  z-index: 10;
+  padding: 0.4rem;
+}
+~RULE~
+[data-modalcontent] {
+  padding: 0.5rem;
+  min-height: 1rem;
+  vertical-align: middle;
+}
+~RULE~
+@media screen and (width < 1200px) {
+  .popupContainer {
+    max-width: 75vw;
+    max-height: 40vh;
+  }
+}
+~RULE~
+@media screen and (width < 640px) {
+  .popupContainer {
+    max-width: 90vw;
+    max-height: 60vh;
+  }
+}
+~RULE~
+#modalWarning {
+  color: red;
+  background-color: rgb(255, 255, 240);
+  font-weight: bold;
+  border: 3px solid red;
+  padding: 1rem;
+  margin: 0px auto 0.5em;
+  text-align: center;
+  opacity: 0;
+  max-height: 0px;
+  position: absolute;
+  box-shadow: rgb(153, 153, 153) 2px 2px 8px;
+  transition: all 0.5s ease 0s;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+~RULE~
+#modalWarning.active:after {
+  content: 'Please close this box first!';
+}
+~RULE~
+#modalWarning.active {
+   opacity: 1;
+   max-height: 100%;
+   max-width: 100%;
+   height: auto;
+   z-index: 12;
+}
+~RULE~
+.closeHandleIcon {
+   opacity: 0;
+   z-index: -1;
+   cursor: pointer;
+   width: 32px;
+   height: 32px;
+   background: url('data:image/svg+xml;utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20version%3D%221.1%22%20id%3D%22Layer_1%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%20128%20128%22%20style%3D%22enable-background%3Anew%200%200%20128%20128%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Crect%20x%3D%22-368%22%20y%3D%226%22%20style%3D%22display%3Anone%3Bfill%3A%23E0E0E0%3B%22%20width%3D%22866%22%20height%3D%221018%22%2F%3E%3Ccircle%20style%3D%22fill%3A%23FFFFFF%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2248%22%2F%3E%3Ccircle%20style%3D%22fill%3A%238CCFB9%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2239%22%2F%3E%3Ccircle%20style%3D%22fill%3Anone%3Bstroke%3A%23444B54%3Bstroke-width%3A6%3Bstroke-miterlimit%3A10%3B%22%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2248%22%2F%3E%3Cpolyline%20style%3D%22fill%3Anone%3Bstroke%3A%23FFFFFF%3Bstroke-width%3A6%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3B%22%20points%3D%2242%2C69%2055.55%2C81%20%20%2086%2C46%20%22%2F%3E%3C%2Fsvg%3E') no-repeat;
+}
+~RULE~
+.closeHandleIcon.active {
+   z-index: 12;
+   opacity: 1;
+   position: absolute;
+   margin-right: -16px;
+   margin-top: -16px;
+};
