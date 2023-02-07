@@ -20,66 +20,19 @@ import {
   input2Collection,
   setCollectionFromCssSelector,
   truncateHtmlStr,
-  loop
+  proxify,
+  addJQLStatics,
 } from "./src/JQLExtensionHelpers.js";
 
-import {
-  debugLog,
-  Log, } from "./src/JQLLog.js";
+import { Log, isLogSystem } from "./src/JQLLog.js";
 
-import JQLMethods from "./src/JQLMethods.js";
-import popupFactory from "./src/Popup.js";
-import handling from "./src/HandlerFactory.js";
 /* endregion imports */
 
 /* region MAIN */
-const exts = JQLMethods.instanceExtensions;
-const loops = JQLMethods.straigthLoops;
-let logSystem = false;
 const logLineLength = 80;
-const styleFactory = (await import("https://kooiinc.github.io/LifeCSS/index.js")).default;
-const setStyle = styleFactory({createWithId: `JQLStylesheet`});
-const createStyle = id => styleFactory({createWithId: id});
-let JQL = {
-  $: JQLFactory(),
-  setStyle,
-  createStyle,
-  debugLog,
-  log: Log,
-  setSystemLogActiveState: activeState => logSystem = activeState,
-};
-const { $ }= JQL;
-const virtual = html => $(html, document.createElement("br"));
-const proxify = instance => {
-  const runExt =(method) => (...args) =>
-    method && method instanceof Function && method(proxify(instance), ...args);
-  const runLoop = (method) => (...args) =>
-    method && method instanceof Function && loop(proxify(instance), el => method(el, ...args));
-  const proxyMe = { get(obj, name) {
-      return loops[name] ?
-        runLoop(loops[name]) : exts[name] ?
-        runExt(exts[name]) : obj[name]; } };
-  return new Proxy( instance, proxyMe ); };
-const staticMethods = {
-  setStyle,
-  createStyle,
-  virtual,
-  insertPositions,
-  popup: () => popupFactory($),
-  text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-  node: (selector, root = document.body)  => document.querySelector(selector, root),
-  nodes: (selector, root = document.body) => document.querySelectorAll(selector, root),
-  delegate: (type, origin, ...handlers) => {
-    if (!origin || origin instanceof Function) {
-      origin instanceof Function && handlers.push(origin);
-      return handling(null, type, null, ...handlers);
-    }
-    return handling(null, type, origin, ...handlers);
-  },
-};
-Object.entries(staticMethods).forEach( ([name, method]) => $[name] = method);
+let JQL = JQLFactory();
 
-export default JQL;
+export default addJQLStatics(JQL);
 /* endregion MAIN */
 
 /* region factory */
@@ -93,11 +46,8 @@ function JQLFactory() {
     let instance = {
       collection: input2Collection(input) ?? [],
       isVirtual: root instanceof HTMLBRElement,
-      setStyle,
-      virtual,
       isJQL: true,
-      insertPositions,
-    };
+      insertPositions, };
 
     const isRawElemCollection = isArrayOfHtmlElements(instance.collection);
 
@@ -108,20 +58,19 @@ function JQLFactory() {
           : input, logLineLength)}]`);
 
     if (instance.collection.length && isRawElemCollection) {
-      logSystem && Log(logStr);
+      isLogSystem() && Log(logStr);
       return proxify(instance);
     }
 
     if (shouldCreateElements) {
-      [input].flat()
-        .forEach(htmlFragment => instance.collection.push(createElementFromHtmlString(htmlFragment)));
+      [input].flat().forEach(htmlFragment => instance.collection.push(createElementFromHtmlString(htmlFragment)));
     }
 
     if (shouldCreateElements && instance.collection.length > 0) {
       const errors = instance.collection.filter( el => el.dataset?.jqlcreationerror );
       instance.collection = instance.collection.filter(el => !el.dataset?.jqlcreationerror);
 
-      logSystem && Log(`${logStr}\n  Created ${instance.isVirtual ? ` VIRTUAL` : ``} (outerHTML truncated) [${
+      isLogSystem() && Log(`${logStr}\n  Created ${instance.isVirtual ? ` VIRTUAL` : ``} (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(instance.collection) ||
           "sanitized: no elements remaining", logLineLength)}]`);
 
@@ -139,7 +88,7 @@ function JQLFactory() {
   }
 
     const forLog = setCollectionFromCssSelector(input, root, instance);
-    logSystem && Log(forLog);
+    isLogSystem() && Log(forLog);
     return proxify(instance);
   }
 }

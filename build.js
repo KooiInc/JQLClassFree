@@ -12,22 +12,6 @@ const esContext = {
   target: ['esnext'],
 };
 
-const plugins = [{
-  name: 'pluggedin',
-  setup(build) {
-    let count = 0;
-    build.onEnd(result => {
-      count += 1;
-      return onRebuild(result.errors, count < 1);
-    });
-  },
-}];
-const onRebuild = (errors, first) => {
-  if (errors.length) {
-    return log(`${first ? `first ` : ``}esbuild [JQL class free] -> not ok!`);
-  }
-  log(`${first ? `first ` : ``}esbuild [JQL class free] -> ok`);
-};
-const ctx = await builder.context({...esContext, plugins });
-await ctx.watch();
-process.on(`exit`, () => ctx.dispose());
+const ctx = await builder.context(esContext);
+await ctx.rebuild().then(r => ctx.dispose());
+process.exit();

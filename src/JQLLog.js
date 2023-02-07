@@ -1,14 +1,6 @@
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
 import {time, isVisible} from "./JQLExtensionHelpers.js";
-//const styleFactory = (await import("https://kooiinc.github.io/LifeCSS/index.js")).default;
 import jql from "../index.js";
-let _createStyle;
-const createStyleFactory = () => {
-  if (!_createStyle) {
-    const { createStyle } = jql;
-    _createStyle = createStyle;
-  }
-}
 
 const debugLog = {
   get isOn() { return useLogging; },
@@ -50,6 +42,7 @@ const debugLog = {
     Log(`Cleared`);
   }
 };
+let logSystem = false;
 let stylingDefault4Log = {
   "#logBox": {
     minWidth: `0px`,
@@ -120,8 +113,8 @@ let log2Console = false;
 let reverseLogging = true;
 let logBox = () => document.querySelector(`#jql_logger`);
 const setStyling4Log = (styles = stylingDefault4Log) => {
-  createStyleFactory();
-  const setStyle = _createStyle(`JQLLogCSS`);
+  const { createStyle } = jql;
+  const setStyle = createStyle(`JQLLogCSS`);
   Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style));
 }
 let useHtml = true;
@@ -154,5 +147,7 @@ const Log = (...args) => {
           `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
 };
+const setSystemLogActiveState = tf => logSystem = tf;
+const isLogSystem = () => logSystem;
 
-export { Log, debugLog, setStyling4Log };
+export { Log, debugLog, setStyling4Log, setSystemLogActiveState, isLogSystem };

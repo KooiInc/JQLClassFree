@@ -10,6 +10,7 @@ import {
   inject2DOMTree } from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 import jql from "../index.js";
+const get$ = () => jql;
 
 const empty = el => el && (el.textContent = "");
 const setData = (el, keyValuePairs) => {
@@ -304,8 +305,8 @@ const allMethods = {
         }
         const index = +indexOrSelector;
         return index < self.collection.length
-          ? $(self.collection[indexOrSelector])
-          : $(self.collection.slice(-1));
+          ? get$()(self.collection[indexOrSelector])
+          : get$()(self.collection.slice(-1));
       } else {
         return self;
       }
@@ -323,7 +324,7 @@ const allMethods = {
     },
     duplicate: (self, toDOM = false) => {
       const clonedCollection = self.toNodeList();
-      return toDOM ? $(clonedCollection) : self.virtual(clonedCollection);
+      return toDOM ? get$()(clonedCollection) : self.virtual(clonedCollection);
     },
     toDOM: (self, root = document.body, position = insertPositions.BeforeEnd) => {
       if (self.isVirtual) {
@@ -343,12 +344,11 @@ const allMethods = {
     first$: (self, indexOrSelector) => self.single(indexOrSelector),
     find: (self, selector) => self.first()?.querySelectorAll(selector) || [],
     find$: (self, selector) => {
-      const {$} = jql;
       const found = self.collection.reduce((acc, el) =>
         [...acc, [...el.querySelectorAll(selector)]], [])
         .flat()
         .filter(el => el && el instanceof HTMLElement);
-      return found.length && $(found[0]) || $();
+      return found.length && get$()(found[0]) || $();
     },
     prop: (self, property, value) => {
       if (!value) {
@@ -364,7 +364,7 @@ const allMethods = {
     on: (self, type, callback) => {
       if (self.collection.length) {
         const cssSelector = addHandlerId(self);
-        handlerFactory(self, type, cssSelector, callback);
+        get$().handle(self, type, cssSelector, callback);
       }
 
       return self;
@@ -407,7 +407,7 @@ const allMethods = {
     },
     dimensions: self => self.first()?.getBoundingClientRect(),
     delegate: (self, type, cssSelector, ...callbacks) => {
-      callbacks.forEach(callback => handlerFactory(self, type, cssSelector, callback));
+      callbacks.forEach(callback => get$().handle(self, type, cssSelector, callback));
       return self;
     },
     ON: (self, type, ...callbacks) => {
