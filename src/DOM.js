@@ -3,7 +3,7 @@ import {
   getRestricted,
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
-import {truncateHtmlStr} from "./JQLExtensionHelpers.js";
+import { truncateHtmlStr } from "./JQLExtensionHelpers.js";
 const insertPositions = {
   BeforeBegin: "beforebegin",
   AfterBegin: "afterbegin",

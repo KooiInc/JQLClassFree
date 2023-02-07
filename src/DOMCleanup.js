@@ -1,4 +1,4 @@
-import {truncate2SingleStr} from "./JQLExtensionHelpers.js";
+import { truncate2SingleStr } from "./JQLExtensionHelpers.js";
 import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
 let logElementCreationErrors2Console = false;
