@@ -1,7 +1,7 @@
+import jql from "../index.js";
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
 import {time, isVisible} from "./JQLExtensionHelpers.js";
-import jql from "../index.js";
-const logStyling = await fetch(`../src/Resource/defaultLogStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
+let logStyling = await fetch(`../src/Resource/defaultLogStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
 const debugLog = {
   get isOn() { return useLogging; },
   isVisible: () => isVisible(logBox()),
@@ -47,13 +47,10 @@ let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
 let logBox = () => document.querySelector(`#jql_logger`);
-const setStyling4Log = (styles = logStyling) => {
-  const setStyle = jql.createStyle(`JQLLogCSS`);
-  styles.forEach(selector => setStyle(selector));
-}
 let useHtml = true;
 const createLogElement = () => {
-  setStyling4Log();
+  const setStyle = jql.createStyle(`JQLLogCSS`);
+  setStyling4Log(setStyle);
   const jql_logger_element = useHtml ? `div` : `pre`;
   const loggingFieldSet = `
     <div id="logBox">
@@ -83,5 +80,11 @@ const Log = (...args) => {
 };
 const setSystemLogActiveState = tf => logSystem = tf;
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
+
+function setStyling4Log(setStyle) {
+  logStyling.forEach(selector => setStyle(selector));
+  logStyling = undefined;
+}
+
 
 export { Log, debugLog, setSystemLogActiveState, systemLog };
