@@ -113,8 +113,7 @@ let log2Console = false;
 let reverseLogging = true;
 let logBox = () => document.querySelector(`#jql_logger`);
 const setStyling4Log = (styles = stylingDefault4Log) => {
-  const { createStyle } = jql;
-  const setStyle = createStyle(`JQLLogCSS`);
+  const setStyle = jql.createStyle(`JQLLogCSS`);
   Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style));
 }
 let useHtml = true;
