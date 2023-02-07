@@ -10,7 +10,6 @@ import {
   inject2DOMTree } from "./JQLExtensionHelpers.js";
 import handlerFactory from "./HandlerFactory.js";
 import jql from "../index.js";
-const get$ = () => jql;
 
 const empty = el => el && (el.textContent = "");
 const setData = (el, keyValuePairs) => {
@@ -305,8 +304,8 @@ const allMethods = {
         }
         const index = +indexOrSelector;
         return index < self.collection.length
-          ? get$()(self.collection[indexOrSelector])
-          : get$()(self.collection.slice(-1));
+          ? jql(self.collection[indexOrSelector])
+          : jql(self.collection.slice(-1));
       } else {
         return self;
       }
@@ -324,7 +323,7 @@ const allMethods = {
     },
     duplicate: (self, toDOM = false) => {
       const clonedCollection = self.toNodeList();
-      return toDOM ? get$()(clonedCollection) : self.virtual(clonedCollection);
+      return toDOM ? jql(clonedCollection) : self.virtual(clonedCollection);
     },
     toDOM: (self, root = document.body, position = insertPositions.BeforeEnd) => {
       if (self.isVirtual) {
@@ -348,7 +347,7 @@ const allMethods = {
         [...acc, [...el.querySelectorAll(selector)]], [])
         .flat()
         .filter(el => el && el instanceof HTMLElement);
-      return found.length && get$()(found[0]) || $();
+      return found.length && jql(found[0]) || $();
     },
     prop: (self, property, value) => {
       if (!value) {
@@ -364,7 +363,7 @@ const allMethods = {
     on: (self, type, callback) => {
       if (self.collection.length) {
         const cssSelector = addHandlerId(self);
-        get$().handle(self, type, cssSelector, callback);
+        jql.handle(self, type, cssSelector, callback);
       }
 
       return self;
@@ -407,7 +406,7 @@ const allMethods = {
     },
     dimensions: self => self.first()?.getBoundingClientRect(),
     delegate: (self, type, cssSelector, ...callbacks) => {
-      callbacks.forEach(callback => get$().handle(self, type, cssSelector, callback));
+      callbacks.forEach(callback => jql.handle(self, type, cssSelector, callback));
       return self;
     },
     ON: (self, type, ...callbacks) => {
