@@ -24,7 +24,7 @@ import {
   addJQLStatics,
 } from "./src/JQLExtensionHelpers.js";
 
-import { Log, isLogSystem } from "./src/JQLLog.js";
+import { Log, systemLog } from "./src/JQLLog.js";
 
 /* endregion imports */
 
@@ -58,7 +58,7 @@ function JQLFactory() {
           : input, logLineLength)}]`);
 
     if (instance.collection.length && isRawElemCollection) {
-      isLogSystem() && Log(logStr);
+      systemLog(logStr);
       return proxify(instance);
     }
 
@@ -70,7 +70,7 @@ function JQLFactory() {
       const errors = instance.collection.filter( el => el.dataset?.jqlcreationerror );
       instance.collection = instance.collection.filter(el => !el.dataset?.jqlcreationerror);
 
-      isLogSystem() && Log(`${logStr}\n  Created ${instance.isVirtual ? ` VIRTUAL` : ``} (outerHTML truncated) [${
+      systemLog(`${logStr}\n  Created ${instance.isVirtual ? ` VIRTUAL` : ``} (outerHTML truncated) [${
         truncateHtmlStr(ElemArray2HtmlString(instance.collection) ||
           "sanitized: no elements remaining", logLineLength)}]`);
 
@@ -88,7 +88,7 @@ function JQLFactory() {
   }
 
     const forLog = setCollectionFromCssSelector(input, root, instance);
-    isLogSystem() && Log(forLog);
+    systemLog(forLog);
     return proxify(instance);
   }
 }

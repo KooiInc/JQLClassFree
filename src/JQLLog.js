@@ -147,6 +147,6 @@ const Log = (...args) => {
     );
 };
 const setSystemLogActiveState = tf => logSystem = tf;
-const isLogSystem = () => logSystem;
+const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 
-export { Log, debugLog, setStyling4Log, setSystemLogActiveState, isLogSystem };
+export { Log, debugLog, setStyling4Log, setSystemLogActiveState, systemLog };
