@@ -24,7 +24,7 @@ import {
   addJQLStatics,
 } from "./src/JQLExtensionHelpers.js";
 
-import { Log, systemLog } from "./src/JQLLog.js";
+import { systemLog } from "./src/JQLLog.js";
 
 /* endregion imports */
 
