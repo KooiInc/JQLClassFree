@@ -42,79 +42,15 @@ const debugLog = {
     Log(`Cleared`);
   }
 };
+const defaultStyling = defaultLogStyles();
 let logSystem = false;
-let stylingDefault4Log = {
-  "#logBox": {
-    minWidth: `0px`,
-    maxWidth: `0px`,
-    minHeight: `0px`,
-    maxHeight: `0px`,
-    width: `0`,
-    height: `0`,
-    zIndex: -1,
-    border: `none`,
-    padding: `0px`,
-    overflow: `hidden`,
-    transition: `all 0.3s ease`,
-    position: `fixed`,
-  },
-  "#logBox.visible": {
-    backgroundColor: `rgb(255, 255, 224)`,
-    zIndex: 1,
-    position: `static`,
-    border: `1px dotted rgb(153, 153, 153)`,
-    maxWidth: `33vw`,
-    minWidth: `30vw`,
-    minHeight: `10vh`,
-    maxHeight: `90vh`,
-    overflow: `auto`,
-    width: `50vw`,
-    height: `20vh`,
-    margin: `1rem 0px`,
-    padding: `0px 8px 19px`,
-    resize: `both`,
-  },
-  "@media screen and (min-width: 320px) and (max-width: 1024px)": {
-      "#logBox.visible": {
-          maxWidth: `90vw`,
-          width: `90vw`,
-          resize: `none` }, },
-  "#logBox .legend": {
-    textAlign: `center`,
-    position: `absolute`,
-    marginTop: `-1em`,
-    width: `inherit`,
-    maxWidth: `inherit`,
-  },
-  "#logBox .legend div": {
-    textAlign: `center`,
-    display: `inline-block`,
-    maxWidth: `inherit`,
-    height: `1.2rem`,
-    backgroundColor: `rgb(119, 119, 119)`,
-    padding: `2px 10px`,
-    color: `rgb(255, 255, 255)`,
-    boxShadow: `rgb(119 119 119) 2px 1px 10px`,
-    borderRadius: `4px`,
-  },
-  "#logBox .legend div:before": {
-    content: `"JQL Logging"`,
-  },
-  "#logBox #jql_logger": {
-    marginTop: `0.7rem`,
-    lineHeight: `1.4em`,
-    fontFamily: `consolas, monospace`,
-    whiteSpace: `pre-wrap`,
-    maxWidth: `inherit`,
-  }
-};
 let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
 let logBox = () => document.querySelector(`#jql_logger`);
-const setStyling4Log = (styles = stylingDefault4Log) => {
+const setStyling4Log = (styles = defaultStyling) => {
   const setStyle = jql.createStyle(`JQLLogCSS`);
-  Object.entries(styles).forEach(([selector, style]) => setStyle(selector, style));
+  styles.forEach(selector => setStyle(selector));
 }
 let useHtml = true;
 const createLogElement = () => {
@@ -149,4 +85,74 @@ const Log = (...args) => {
 const setSystemLogActiveState = tf => logSystem = tf;
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 
-export { Log, debugLog, setStyling4Log, setSystemLogActiveState, systemLog };
+export { Log, debugLog, setSystemLogActiveState, systemLog };
+
+function defaultLogStyles() {
+  return [
+    `#logBox {
+      min-width: 0px;
+      max-width: 0px;
+      min-height: 0px;
+      max-height: 0px;,
+      width: 0;
+      height: 0;
+      z-index: -1;
+      border: none;
+      padding: 0px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: fixed;
+    }`,
+    `#logBox.visible {
+      background-color: rgb(255, 255, 224);
+      z-index: 1;
+      position: static;
+      border: 1px dotted rgb(153, 153, 153);
+      max-width: 33vw;
+      min-width: 30vw;
+      min-height: 10vh;
+      max-height: 90vh;
+      overflow: auto;
+      width: 50vw;
+      height: 20vh;
+      margin: 1rem 0px;
+      padding: 0px 8px 19px;
+      resize: both;
+    }`,
+    `@media screen and (min-width: 320px) and (max-width: 1024px) {
+      #logBox.visible: {
+        max-width: 90vw;
+        width: 90vw;
+        resize: none;
+      }
+    }`,
+    `#logBox .legend {
+      text-align: center;
+      position: absolute;
+      margin-top: -1em;
+      width: inherit;
+      max-width: inherit;
+    }`,
+    `#logBox .legend div {
+      text-align: center;
+      display: inline-block;
+      max-width: inherit;
+      height: 1.2rem;
+      background-color: rgb(119, 119, 119);
+      padding: 2px 10px;
+      color: rgb(255, 255, 255);
+      box-shadow: rgb(119 119 119) 2px 1px 10px;
+      border-radius: 4px;
+    }`,
+    `#logBox .legend div:before {
+      content: 'JQL Logging';
+    }`,
+    `#logBox #jql_logger {
+      marginTop: 0.7rem;
+      lineHeight: 1.4em;
+      fontFamily: consolas, monospace;
+      whiteSpace: pre-wrap;
+      maxWidth: inherit;
+    }`
+  ];
+}
