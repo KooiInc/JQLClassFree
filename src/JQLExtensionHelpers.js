@@ -1,6 +1,6 @@
-import {element2DOM, insertPositions} from "./DOM.js";
+import {  createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import allLambdas from "./JQLMethods.js";
-import {debugLog, Log, setSystemLogActiveState} from "./JQLLog.js";
+import {debugLog, Log, setSystemLogActiveState, systemLog} from "./JQLLog.js";
 import popupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 const styleFactory = (await import("https://kooiinc.github.io/LifeCSS/index.js")).default;
@@ -197,5 +197,8 @@ export {
   truncateHtmlStr,
   truncate2SingleStr,
   proxify,
-  addJQLStatics
+  addJQLStatics,
+  createElementFromHtmlString,
+  insertPositions,
+  systemLog,
 };

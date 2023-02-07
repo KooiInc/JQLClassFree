@@ -7,11 +7,6 @@
 
 /* region imports */
 import {
-  createElementFromHtmlString,
-  insertPositions,
-} from "./src/DOM.js";
-
-import {
   isHtmlString,
   isArrayOfHtmlStrings,
   isArrayOfHtmlElements,
@@ -22,9 +17,10 @@ import {
   truncateHtmlStr,
   proxify,
   addJQLStatics,
+  createElementFromHtmlString,
+  insertPositions,
+  systemLog,
 } from "./src/JQLExtensionHelpers.js";
-
-import { systemLog } from "./src/JQLLog.js";
 
 /* endregion imports */
 
