@@ -1,8 +1,9 @@
-const {$, $$: virtual, log, debugLog, setSystemLogActiveState} =
-  (await import("../Bundle/jql.min.js")).default;
-
+// import $ from "../Bundle/jql.min.js";
+import $ from "../index.js";
+const {$$: virtual, log, debugLog, setSystemLogActiveState} = $;
 // initialize popup
 const popup = $.popup();
+console.log($.handle);
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 const $$ = $.virtual;
 
@@ -10,6 +11,7 @@ const $$ = $.virtual;
 // const { debugLog, log, } = $;
 debugLog.on();
 debugLog.hide();
+
 // activate logging JQL events
 setSystemLogActiveState(true);
 
@@ -62,7 +64,7 @@ getDelegates4Document()
 
 // generic delegates (on document) from the static $.delegate
 const someClicks = [
-  evt => evt.target.classList.contains(`exampleText`) && log(`HI from div.exampleText (you clicked it)`) ];
+  evt => evt.target.closest(`.exampleText`) && log(`HI from div.exampleText (you clicked it)`) ];
 $.delegate(`click`, ...someClicks);
 
 // onclick is not allowed, so will be removed on element creation
