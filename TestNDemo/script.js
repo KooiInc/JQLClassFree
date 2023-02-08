@@ -98,22 +98,27 @@ $([`<notallowed id="removal_immanent"></notallowed>`,
   .appendTo(JQLRoot);
 
 // create a few buttons. Some already contain an event handler (delegated)
-const cssPopupBttn = $.virtual(`<button>show popup css</button>`).on(`click`, _ => showStyling(`JQLPopupCSS` ));
+const cssPopupBttn = $.virtual(`<button>show popup css</button>`)
+    .on(`click`, _ => showStyling(`JQLPopupCSS` ));
 
 const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
     $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
     $$(`<button id="clearLog">Clear Log box</button>`).on(`click`, debugLog.clear),
-    $$(`<button id="showComments">Show document comments</button>`).prop(`title`, `Show content of comment elements in a popup`),
-    $$(`<button id="showCSS">Show custom CSS</button>`).prop(`title`, `Show the dynamically created styling in a popup`)
+    $$(`<button id="showComments">Show document comments</button>`)
+      .prop(`title`, `Show content of comment elements in a popup`),
+    $$(`<button id="showCSS">Show custom CSS</button>`)
+      .prop(`title`, `Show the dynamically created styling in a popup`)
       .on(`click`, _ => showStyling(`JQLStylesheet`, cssPopupBttn.first().outerHTML)),
     $$(`<button>Modal popup demo</button`).on(`click`, modalDemo),
     $$(`<button>Github</button>`)
       .on(`click`, () => {
           popup.create( $(`
           <p>
-            The repository can be found  @${createExternalLink(`https://github.com/KooiInc/JQLClassFree`,
-                                                               `github.com/KooiInc/JQLClassFree`).outerHtml()}<br>
-            The documentation resides @${createExternalLink(apiLinkPrefix, `kooiinc.github.io/JQLDoc`).outerHtml()}
+            The repository can be found  @${
+              createExternalLink(`https://github.com/KooiInc/JQLClassFree`,
+                                 `github.com/KooiInc/JQLClassFree`).outerHtml()}<br>
+            The documentation resides @${
+              createExternalLink(apiLinkPrefix, `kooiinc.github.io/JQLDoc`).outerHtml()}
           </p>`));
         }
       )])
@@ -207,47 +212,47 @@ function modalDemo() {
 
 // create a few style rules in <style id="JQLCreatedCSS">
 function initStyling() {
-  const style = $.setStyle;
-  style(`body`, {
+  const setStyleRule = $.setStyle;
+  setStyleRule(`body`, {
     font: `normal 12px/15px verdana, arial`,
     margin: `2rem`,
   });
-  style(`pre[class*='language-'] {
+  setStyleRule(`pre[class*='language-'] {
     position: relative;
     display: block;
   }`)
-  style(`code:not([class*=language-])`, {
+  setStyleRule(`code:not([class*=language-])`, {
     color: `green`,
     fontFamily: `'Courier New', Courier, monospace`,
     position: `relative`,
   });
-  style(`.green`, {
+  setStyleRule(`.green`, {
     color: `green`,
   });
-  style( `#StyledPara`, { padding: `6px` });
-  style( `#StyledPara h2`, { marginTop: `6px` });
-  style( `.thickBorder`, {
+  setStyleRule( `#StyledPara`, { padding: `6px` });
+  setStyleRule( `#StyledPara h2`, { marginTop: `6px` });
+  setStyleRule( `.thickBorder`, {
     border: `5px solid green`,
     borderWidth: `5px`,
     padding: `0 0.5rem`,
     display: `inline-block` } );
-  style("a.ExternalLink", {
+  setStyleRule("a.ExternalLink", {
     textDecoration: `none`,
     color: `blue`,
     backgroundColor: `#EEE`,
     padding: `3px`,
     'font-weight': `bold` });
-  style(`.codeVwr`, {
+  setStyleRule(`.codeVwr`, {
     cursor: `pointer`,
     color: `#777`,
     backgroundColor: `#EEE`,
     padding: `3px`,
     fontWeight: `bold`,
   });
-  style(`.codeVwr:before`, {content: `' 'attr(data-updown)`});
-  style(`pre.hljs`, {display: `flex`});
-  style(`code.hljs`, {padding: `0.5em 1em`, display: `initial`});
-  style(`.upDownFader`, {
+  setStyleRule(`.codeVwr:before`, {content: `' 'attr(data-updown)`});
+  setStyleRule(`pre.hljs`, {display: `flex`});
+  setStyleRule(`code.hljs`, {padding: `0.5em 1em`, display: `initial`});
+  setStyleRule(`.upDownFader`, {
     maxHeight: `0` ,
     opacity: `0`,
     width: `0`,
@@ -255,30 +260,30 @@ function initStyling() {
     overflow: `hidden`,
     transition: `all 0.7s`,
   });
-  style(`#logBttn[data-on='0']:before`, {content: `'Show logs'`}),
-  style(`#logBttn[data-on='1']:before`, {content: `'Hide logs'`}),
-  style(`.upDownFader.down`, {
+  setStyleRule(`#logBttn[data-on='0']:before`, {content: `'Show logs'`}),
+  setStyleRule(`#logBttn[data-on='1']:before`, {content: `'Hide logs'`}),
+  setStyleRule(`.upDownFader.down`, {
     maxHeight: `calc(100% - 1px)`,
     position: `relative`,
     width: `811px`,
     opacity: 1,
     overflow: `auto`,
   });
-  style(`b.arrRight {
+  setStyleRule(`b.arrRight {
     vertical-align: baseline;
     font-size: 1.2rem;
   }`)
-  style(`.cmmt { color: #888; }`);
-  style(`.cssView {
+  setStyleRule(`.cmmt { color: #888; }`);
+  setStyleRule(`.cssView {
     white-space: pre-wrap;
     padding-bottom: 1rem;
     overflow: hidden;
   }`);
-  style(`@media screen and (width < 1400px) {
+  setStyleRule(`@media screen and (width < 1400px) {
     #bttnblock button { margin-top: 0.4rem; }
   }`);
-  style(`.hidden`, {display: `none`});
-  style(`b.attention`, {color: `red`, fontSize: `1.2em`});
+  setStyleRule(`.hidden`, {display: `none`});
+  setStyleRule(`b.attention`, {color: `red`, fontSize: `1.2em`});
 }
 
 // create a few delegated handler methods
