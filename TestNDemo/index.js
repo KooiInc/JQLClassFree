@@ -1,10 +1,9 @@
 import $ from "../Bundle/jql.min.js";
-const {$$: virtual, log, debugLog, setSystemLogActiveState} = $;
+const {virtual: $$, log, debugLog, setSystemLogActiveState} = $;
 
 // initialize popup
 const popup = $.popup();
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
-const $$ = $.virtual;
 
 // assign a few local methods from (the static methods within) $
 // const { debugLog, log, } = $;
