@@ -1,5 +1,5 @@
 import $ from "../Bundle/jql.min.js";
-//import $ from "../index.js";
+
 const {$$: virtual, log, debugLog, setSystemLogActiveState} = $;
 // initialize popup
 const popup = $.popup();
