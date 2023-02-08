@@ -1,4 +1,5 @@
-import $ from "../Bundle/jql.min.js";
+//import $ from "../Bundle/jql.min.js";
+import $ from "../index.js";
 
 const {$$: virtual, log, debugLog, setSystemLogActiveState} = $;
 // initialize popup
@@ -360,7 +361,7 @@ function allComments(root, result = []) {
 }
 
 async function injectCode() {
-  const source = await fetch("./script.js").then(r => r.text());
+  const source = await fetch("./index.js").then(r => r.text());
   $(`#JQLRoot`)
     .append( $(`
     <div class="upDownFader" id="code">

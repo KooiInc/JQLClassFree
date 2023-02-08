@@ -21,7 +21,6 @@ import {
   insertPositions,
   systemLog,
 } from "./src/JQLExtensionHelpers.js";
-
 /* endregion imports */
 
 /* region MAIN */
@@ -70,15 +69,14 @@ function JQLFactory() {
         truncateHtmlStr(ElemArray2HtmlString(instance.collection) ||
           "sanitized: no elements remaining", logLineLength)}]`);
 
-      errors.length && console.error(`JQL: not rendered illegal html: "${
-        errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
+      if (errors.length) {
+        console.error(`JQL: illegal html, not rendered: "${
+          errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
+      }
 
       if (!instance.isVirtual) {
         inject2DOMTree(instance.collection, root, position);
       }
-
-      errors.length && console.error(`JQL: not rendered illegal html: "${
-        errors.reduce( (acc, el) => acc.concat(`${el.textContent}\n`), ``).trim()}"` );
 
       return proxify(instance);
   }
