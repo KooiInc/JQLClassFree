@@ -149,7 +149,6 @@ const addJQLStatics = $ => {
     }
     return handle(null, type, origin, ...handlers);
   };
-  let logSystem = false;
   const staticMethods = {
     setStyle,
     createStyle,
