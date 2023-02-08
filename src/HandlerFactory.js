@@ -1,4 +1,3 @@
-// import jql from "../index.js";
 let handlers = {};
 export default $ => {
   const metaHandler = evt => handlers[evt.type].forEach(handler => handler(evt));
