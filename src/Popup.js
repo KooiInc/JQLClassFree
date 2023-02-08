@@ -14,12 +14,14 @@ function popupFactory($) {
     savedTimer = setTimeout(() => modalWarner.removeClass(`active`), 2500);
     return true;
   }
-  const currentModalState = {
-    currentPopupIsModal: false,
-    set isModal(tf) { this.currentPopupIsModal = tf; },
-    get isModal() { return this.currentPopupIsModal; },
-    isModalActive() { return this.currentPopupIsModal && popupBox.hasClass(`active`) && stillOpen() },
-  }
+  const currentModalState = (() =>{
+    let currentPopupIsModal = false;
+    return {
+      set isModal(tf) { currentPopupIsModal = tf; },
+      get isModal() { return currentPopupIsModal; },
+      get isModalActive() { return currentPopupIsModal && popupBox.hasClass(`active`) && stillOpen() },
+    };
+  })();
   const createElements = _ => {
     const popupBox = $(`<div class="popupContainer">`)
       .append( $(`<span id="closer" class="closeHandleIcon"></span>`)
@@ -58,9 +60,9 @@ function popupFactory($) {
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
   const create = (message, reallyModal = false, callback = undefined) =>
-    !currentModalState.isModalActive() && doCreate(message, reallyModal, callback);
+    !currentModalState.isModalActive && doCreate(message, reallyModal, callback);
   const createTimed = (message, closeAfter = 2, callback = null ) => {
-    if (currentModalState.isModalActive()) { return; }
+    if (currentModalState.isModalActive) { return; }
     deActivate();
     create(message, false, callback);
     const remover = callback ? () => remove(callback) : remove;
@@ -69,7 +71,7 @@ function popupFactory($) {
   function remove(evtOrCallback) {
     endTimer();
 
-    if (currentModalState.isModalActive()) { return; }
+    if (currentModalState.isModalActive) { return; }
 
     const callback = evtOrCallback instanceof Function ? evtOrCallback : savedCallback;
 
