@@ -24,11 +24,7 @@ function popupFactory($) {
     const popupBox = $(`<div class="popupContainer">`)
       .append( $(`<span id="closer" class="closeHandleIcon"></span>`)
         .prop(`title`, `Click here or anywhere outside the box to close`))
-      .append(`
-        <div class="popupBox">
-          <div id="modalWarning"></div>
-          <div data-modalcontent></div>
-        </div>`);
+      .append(`<div class="popupBox"><div id="modalWarning"></div><div data-modalcontent></div></div>`);
     const closer = $(`#closer`);
     const between = $(`<div class="between"></div>`);
     return [popupBox, between, closer, $(`#modalWarning`)];

@@ -51,14 +51,9 @@ let useHtml = true;
 const createLogElement = () => {
   const setStyle = jql.createStyle(`JQLLogCSS`);
   setStyling4Log(setStyle);
-  const jql_logger_element = useHtml ? `div` : `pre`;
-  const loggingFieldSet = `
-    <div id="logBox">
-      <div class="legend">
-        <div></div>
-      </div>
-      <${jql_logger_element} id="jql_logger"></${jql_logger_element}>
-    </div>`;
+  const jql_logger_element_name = useHtml ? `div` : `pre`;
+  const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
+    jql_logger_element_name} id="jql_logger"></${jql_logger_element_name}></div>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
   return document.querySelector(`#jql_logger`);
 };
