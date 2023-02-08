@@ -34,6 +34,13 @@ const setCollectionFromCssSelector = (input, root, self) => {
   return errorStr ??
     `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
+const IS = (obj, isObject) => {
+  const self = obj?.constructor;
+  return isObject ?
+    isObject === self :
+    ( self?.name
+      || (String(self).match(/^function\s*([^\s(]+)/im)
+        || [0,'ANONYMOUS_CONSTRUCTOR'])[1] ); };
 const proxify = instance => {
   const runExt = method => (...args) =>
     method && method instanceof Function && method(proxify(instance), ...args);
@@ -199,4 +206,5 @@ export {
   createElementFromHtmlString,
   insertPositions,
   systemLog,
+  IS,
 };

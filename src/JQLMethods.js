@@ -1,5 +1,6 @@
 import {createElementFromHtmlString, insertPositions} from "./DOM.js";
 import {
+  IS,
   hex2RGBA,
   loop,
   addHandlerId,
@@ -8,7 +9,6 @@ import {
   isObjectAndNotArray,
   randomString,
   inject2DOMTree } from "./JQLExtensionHelpers.js";
-import handlerFactory from "./HandlerFactory.js";
 import jql from "../index.js";
 
 const empty = el => el && (el.textContent = "");
@@ -123,7 +123,7 @@ const allMethods = {
         keyOrKvPairs = {[keyOrKvPairs]: value || "none"};
       }
 
-      if (!Array.isArray((keyOrKvPairs)) && keyOrKvPairs.constructor === Object) {
+      if (!Array.isArray((keyOrKvPairs)) && IS(keyOrKvPairs, Object)) {
         Object.entries(keyOrKvPairs).forEach(([key, value]) => el.style[key] = value);
       }
     },
