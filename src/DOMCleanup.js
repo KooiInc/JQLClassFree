@@ -16,7 +16,7 @@ const logContingentErrors = elCreationInfo => {
   if (logElementCreationErrors2Console && Object.keys(elCreationInfo.removed).length) {
     const msgs = Object.entries(elCreationInfo.removed)
       .reduce( (acc, [k, v]) => [...acc, `${k} => ${v}`], [])
-      .join(`\000A`);
+      .join(`\\000A`);
     console.info(`JQL HTML creation errors:`);
     console.info(msgs);
   }
