@@ -212,77 +212,7 @@ function modalDemo() {
 // create a few style rules in <style id="JQLCreatedCSS">
 function initStyling() {
   const setStyleRule = $.setStyle;
-  setStyleRule(`body`, {
-    font: `normal 12px/15px verdana, arial`,
-    margin: `2rem`,
-  });
-  setStyleRule(`pre[class*='language-'] {
-    position: relative;
-    display: block;
-  }`)
-  setStyleRule(`code:not([class*=language-])`, {
-    color: `green`,
-    fontFamily: `'Courier New', Courier, monospace`,
-    position: `relative`,
-  });
-  setStyleRule(`.green`, {
-    color: `green`,
-  });
-  setStyleRule( `#StyledPara`, { padding: `6px` });
-  setStyleRule( `#StyledPara h2`, { marginTop: `6px` });
-  setStyleRule( `.thickBorder`, {
-    border: `5px solid green`,
-    borderWidth: `5px`,
-    padding: `0 0.5rem`,
-    display: `inline-block` } );
-  setStyleRule("a.ExternalLink", {
-    textDecoration: `none`,
-    color: `blue`,
-    backgroundColor: `#EEE`,
-    padding: `3px`,
-    'font-weight': `bold` });
-  setStyleRule(`.codeVwr`, {
-    cursor: `pointer`,
-    color: `#777`,
-    backgroundColor: `#EEE`,
-    padding: `3px`,
-    fontWeight: `bold`,
-  });
-  setStyleRule(`.codeVwr:before`, {content: `' 'attr(data-updown)`});
-  setStyleRule(`pre.hljs`, {display: `flex`});
-  setStyleRule(`code.hljs`, {padding: `0.5em 1em`, display: `initial`});
-  setStyleRule(`.upDownFader`, {
-    maxHeight: `0` ,
-    opacity: `0`,
-    width: `0`,
-    position: `absolute`,
-    overflow: `hidden`,
-    transition: `all 0.7s`,
-  });
-  setStyleRule(`#logBttn[data-on='0']:before`, {content: `'Show logs'`}),
-  setStyleRule(`#logBttn[data-on='1']:before`, {content: `'Hide logs'`}),
-  setStyleRule(`.upDownFader.down`, {
-    maxHeight: `calc(100% - 1px)`,
-    position: `relative`,
-    width: `811px`,
-    opacity: 1,
-    overflow: `auto`,
-  });
-  setStyleRule(`b.arrRight {
-    vertical-align: baseline;
-    font-size: 1.2rem;
-  }`)
-  setStyleRule(`.cmmt { color: #888; }`);
-  setStyleRule(`.cssView {
-    white-space: pre-wrap;
-    padding-bottom: 1rem;
-    overflow: hidden;
-  }`);
-  setStyleRule(`@media screen and (width < 1400px) {
-    #bttnblock button { margin-top: 0.4rem; }
-  }`);
-  setStyleRule(`.hidden`, {display: `none`});
-  setStyleRule(`b.attention`, {color: `red`, fontSize: `1.2em`});
+  styleRules().forEach(rule => setStyleRule(rule));
 }
 
 // create a few delegated handler methods
@@ -395,4 +325,87 @@ function showStyling(styleId, bttnHtml) {
   const mapped = [...rules].map(mapping).join(`\n\n`);
   popup.create($([`${bttnHtml ? `<p>${bttnHtml}</p>` : `<span/>`}`,
     `<div class="cssView"><h3>style#${styleId} current content</h3>${mapped}</div>`]));
+}
+
+function styleRules() {
+  return [
+    `body {
+      font: normal 12px/15px verdana, arial;
+      margin: 2rem;
+    }`,
+    `pre[class*='language-'] {
+      position: relative;
+      display: block;
+    }`,
+    `code:not([class*=language-]) {
+      color: green;
+      font-family: 'Courier New', Courier, monospace;
+      position: relative;
+    }`,
+    `.green {
+      color: green;
+    }`,
+    `#StyledPara { padding: 6px; }`,
+    `#StyledPara h2 { marginTop: 6px; }`,
+    `.thickBorder {
+      border: 5px solid green;
+      border-width: 5px;
+      padding: 0 0.5rem;
+      display: inline-block;
+    }`,
+    `a.ExternalLink {
+      textDecoration: none;
+      color: blue;
+      background-color: #EEE;
+      padding: 3px;
+      font-weight: bold; 
+    }`,
+    `.codeVwr {
+      cursor: pointer;
+      color: #777;
+      background-color: #EEE;
+      padding: 3px;
+      font-weight: bold;
+    }`,
+    `.codeVwr:before { 
+      content: ' 'attr(data-updown); 
+    }`,
+    `.upDownFader {
+      max-height: 0;
+      opacity: 0;
+      width: 0;
+      position: absolute;
+      overflow: hidden;
+      transition: all 0.7s;
+    }`,
+    `.upDownFader.down {
+      max-height: calc(100% - 1px);
+      position: relative;
+      width: 811px;
+      opacity: 1;
+      overflow: auto;
+    }`,
+    `#logBttn[data-on='0']:before { content: 'Show logs'; }`,
+    `#logBttn[data-on='1']:before { content: 'Hide logs'; }`,
+    `b.arrRight {
+      vertical-align: baseline;
+      font-size: 1.2rem;
+    }`,
+    `.cmmt { color: #888; }`,
+    `.cssView {
+      white-space: pre-wrap;
+      padding-bottom: 1rem;
+      overflow: hidden;
+    }`,
+    `@media screen and (width < 1400px) {
+      #bttnblock button { 
+        margin-top: 0.4rem; 
+      }
+    }`,
+    `.hidden { display: none; }`,
+    `b.attention {
+      color: red, 
+      fontSize: 1.2em; 
+     }`
+  ];
 }
