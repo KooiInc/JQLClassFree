@@ -5,7 +5,6 @@
     see https://youtu.be/XFTOG895C7c?t=2562
 */
 
-/* region imports */
 import {
   isHtmlString,
   isArrayOfHtmlStrings,
@@ -21,20 +20,13 @@ import {
   insertPositions,
   systemLog,
 } from "./src/JQLExtensionHelpers.js";
-/* endregion imports */
 
-/* region MAIN */
-const logLineLength = 80;
-let JQL = JQLFactory();
+export default addJQLStatics(JQLFactory());
 
-export default addJQLStatics(JQL);
-/* endregion MAIN */
-
-/* region factory */
 function JQLFactory() {
-  return instantiate;
+  const logLineLength = 80;
 
-  function instantiate(input, root = document.body, position = insertPositions.BeforeEnd) {
+  return function(input, root = document.body, position = insertPositions.BeforeEnd) {
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
     const shouldCreateElements = !(root instanceof HTMLBRElement) && isRawHtmlArray || isRawHtml;
@@ -58,7 +50,8 @@ function JQLFactory() {
     }
 
     if (shouldCreateElements) {
-      [input].flat().forEach(htmlFragment => instance.collection.push(createElementFromHtmlString(htmlFragment)));
+      [input].flat().forEach(htmlFragment =>
+        instance.collection.push(createElementFromHtmlString(htmlFragment)));
     }
 
     if (shouldCreateElements && instance.collection.length > 0) {
@@ -86,4 +79,3 @@ function JQLFactory() {
     return proxify(instance);
   }
 }
-/* endregion factory */
