@@ -35,7 +35,8 @@ const setCollectionFromCssSelector = (input, root, self) => {
     `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
 const IS = (obj, isObject) => {
-  const self = obj?.constructor;
+  const self = Object.getPrototypeOf(obj || ``)?.constructor;
+
   return isObject ?
     isObject === self :
     ( self?.name

@@ -12,6 +12,7 @@ import {
 import jql from "../index.js";
 
 const empty = el => el && (el.textContent = "");
+const compareCaseInsensitive = (key, compareTo) => key.toLowerCase().trim() === compareTo;
 const setData = (el, keyValuePairs) => {
   el && isObjectAndNotArray(keyValuePairs) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
@@ -21,7 +22,7 @@ const inputElems = [HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement];
 
 const css = (el, keyOrKvPairs, value) => {
   const { setStyle } = jql;
-  if (value && keyOrKvPairs.constructor === String) {
+  if (value && IS(keyOrKvPairs, String)) {
     keyOrKvPairs = {[keyOrKvPairs]: value === "-" ? "" : value};
   }
 
@@ -43,11 +44,11 @@ const assignAttrValues = (el, keyValuePairs) => {
       setData(el, {[key]: value});
     }
 
-    if (key.toLowerCase() === "class") {
+    if (compareCaseInsensitive(key, `class`)) {
       value.split(/\s+/).forEach(v => el.classList.add(`${v}`))
     }
 
-    if (value.constructor === String) {
+    if (IS(value, String)) {
       el[key] = value;
     }
   });
@@ -93,25 +94,23 @@ const allMethods = {
       }
 
       if (value !== undefined) {
-        keyOrObj = {[keyOrObj]: value};
+        keyOrObj = { [keyOrObj]: value };
       }
 
-      if (!value && keyOrObj.constructor === String) {
+      if (!value && IS(keyOrObj, String)) {
         return el.getAttribute(keyOrObj);
       }
 
       Object.entries(keyOrObj).forEach(([key, value]) => {
-        const keyCompare = key.toLowerCase().trim();
-
-        if (keyCompare === `style`) {
+        if (compareCaseInsensitive(key, `style`)) {
           return css(el, value, undefined);
         }
 
-        if (keyCompare === `data`) {
+        if (compareCaseInsensitive(key, `data`)) {
           return setData(el, value);
         }
 
-        if (value instanceof Object) {
+        if (IS(value, Object)) {
           return assignAttrValues(el, value);
         }
 
@@ -119,11 +118,11 @@ const allMethods = {
       });
     },
     style: (el, keyOrKvPairs, value) => {
-      if (value && keyOrKvPairs.constructor === String) {
-        keyOrKvPairs = {[keyOrKvPairs]: value || "none"};
+      if (value && IS(keyOrKvPairs, String)) {
+        keyOrKvPairs = { [keyOrKvPairs]: value || `none` };
       }
 
-      if (!Array.isArray((keyOrKvPairs)) && IS(keyOrKvPairs, Object)) {
+      if (IS(keyOrKvPairs, Object)) {
         Object.entries(keyOrKvPairs).forEach(([key, value]) => el.style[key] = value);
       }
     },
@@ -189,7 +188,7 @@ const allMethods = {
       }
 
       if (firstElem && oldChild) {
-        oldChild = oldChild.constructor === String
+        oldChild = IS(oldChild, String)
           ? firstElem.querySelector(oldChild)
           : oldChild.isJQL
             ? oldChild.first()
@@ -203,7 +202,7 @@ const allMethods = {
       return self;
     },
     replaceMe: (self, newChild) => {
-      newChild = newChild instanceof HTMLElement ? new self.constructor(newChild) : newChild;
+      newChild = newChild instanceof HTMLElement ? self.constructor(newChild) : newChild;
       self.parent().replace(self, newChild)
       return newChild;
     },
@@ -223,13 +222,13 @@ const allMethods = {
       return self;
     },
     parent: self => self.collection.length && self.first().parentNode &&
-      new self.constructor(self.first().parentNode) || self,
+      self.constructor(self.first().parentNode) || self,
     append: (self, ...elems2Append) => {
       if (self.collection.length && elems2Append.length) {
 
         for (let i = 0; i < elems2Append.length; i += 1) {
           const elem = elems2Append[i];
-          if (elem.constructor === String) {
+          if (IS(elem, String)) {
             self.collection.forEach(el => el.appendChild(createElementFromHtmlString(elem)));
             return self;
           }
@@ -259,7 +258,7 @@ const allMethods = {
         for (let i = 0; i < elems2Prepend.length; i += 1) {
           const elem2Prepend = elems2Prepend[i];
 
-          if (elem2Prepend.constructor === String) {
+          if (IS(elem2Prepend, String)) {
             self.collection.forEach(el =>
               el.insertBefore(createElementFromHtmlString(elem2Prepend), el.firstChild))
             return self;
