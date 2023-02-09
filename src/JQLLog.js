@@ -1,6 +1,6 @@
 import jql from "../index.js";
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import {time, isVisible} from "./JQLExtensionHelpers.js";
+import {IS, time, isVisible} from "./JQLExtensionHelpers.js";
 let logStyling = await fetch(`../src/Resource/defaultLogStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
 const debugLog = {
   get isOn() { return useLogging; },
@@ -57,7 +57,7 @@ const createLogElement = () => {
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
   return document.querySelector(`#jql_logger`);
 };
-const decodeForConsole = something => something.constructor === String &&
+const decodeForConsole = something => IS(something, String) &&
   Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
   something;
 const Log = (...args) => {

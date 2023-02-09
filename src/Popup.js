@@ -52,7 +52,7 @@ function popupFactory($) {
     currentModalState.isModal = reallyModal;
     savedCallback = callback;
 
-    if (!message.isJQL && message.constructor !== String) {
+    if (!message.isJQL && !IS(message, String)) {
       return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);    }
 
     endTimer();
