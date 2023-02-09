@@ -1,3 +1,5 @@
+import {IS} from "./JQLExtensionHelpers.js";
+
 export default popupFactory;
 let popupStyling = await fetch(`../src/Resource/defaultPopupStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
 function popupFactory($) {
