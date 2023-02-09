@@ -4,7 +4,7 @@ This is a class free object oriented version of [JQL](https://github.com/KooiInc
 
 It is inspired by a [Douglas Crockford presentation](https://youtu.be/XFTOG895C7c?t=2562).
 
-The idea is to ***not** use `prototype` and `this` anywhere* in the code.
+The objective was to ***not** use `prototype` and `this` **anywhere*** in the code.
 
 ## Documentation
 For now, see the [JQL documentation](https://kooiinc.github.io/JQLDoc). Maybe we'll create something new.
