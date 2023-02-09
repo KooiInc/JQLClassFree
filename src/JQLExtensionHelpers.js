@@ -36,7 +36,7 @@ const setCollectionFromCssSelector = (input, root, self) => {
 };
 const IS = (obj, isObject) => {
   const self = obj === 0 ? Number : obj && Object.getPrototypeOf(obj || ``)?.constructor || {name: 'undefined'};
-  return obj === 0 ? `Number` : isObject ? isObject === self : self.name;
+  return isObject ? isObject === self : self.name;
 };
 const proxify = instance => {
   const runExt = method => (...args) =>
