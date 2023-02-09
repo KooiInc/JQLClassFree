@@ -35,7 +35,9 @@ const setCollectionFromCssSelector = (input, root, self) => {
     `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
 const IS = (obj, shouldBe) => {
-  const self = obj === 0 ? Number : obj && Object.getPrototypeOf(obj || ``)?.constructor || typeof obj;
+  const self = obj === 0 ?
+    Number : obj === `` ? String :
+      obj && Object.getPrototypeOf(obj || ``)?.constructor || typeof obj;
   return shouldBe ? shouldBe === self : self.name;
 };
 const proxify = instance => {
