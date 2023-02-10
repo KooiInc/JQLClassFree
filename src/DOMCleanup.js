@@ -1,6 +1,6 @@
 import { truncate2SingleStr, IS } from "./JQLExtensionHelpers.js";
-import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
+const ATTRS = await fetch(`../src/Resource/attributeStore.json`).then(r => r.json());
 let logElementCreationErrors2Console = false;
 const allowUnknownHtmlTags = {
   on: () => cleanupTagInfo.lenient = true,
@@ -30,15 +30,14 @@ const cleanupHtml = elem => {
   template.innerHTML = `<div id="placeholder">${elem.outerHTML}</div>`;
   const el2Clean = template.content.querySelector("#placeholder");
   el2Clean.querySelectorAll("*").forEach(child => {
-    const isSVG = IS(child, SVGElement);
+    const attrStore = IS(child, SVGElement) ? ATTRS.svg : ATTRS.html;
     [...child.attributes]
       .forEach(attr => {
         const name = attr.name.trim().toLowerCase();
         const value = attr.value.trim().toLowerCase().replace(attrRegExpStore.whiteSpace, ``);
         const evilValue = name === "href"
             ? !attrRegExpStore.validURL.test(value) : attrRegExpStore.notAllowedValues.test(value);
-        const evilAttrib = name.startsWith(`data`)
-            ? !attrRegExpStore.data.test(name) : !ATTRS[isSVG ? `svg` : `html`].find(a => a === name);
+        const evilAttrib = name.startsWith(`data`) ? !attrRegExpStore.data.test(name) : !!attrStore[name];
 
         if (evilValue || evilAttrib) {
           elCreationInfo.removed[`${attr.name}`] = `attribute/property (-value) not allowed, remove (value: ${
