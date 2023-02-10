@@ -3,7 +3,7 @@ import {
   getRestricted,
   setTagPermission,
   allowUnknownHtmlTags } from "./DOMCleanup.js";
-import { truncateHtmlStr } from "./JQLExtensionHelpers.js";
+import { truncateHtmlStr, IS } from "./JQLExtensionHelpers.js";
 const insertPositions = {
   BeforeBegin: "beforebegin",
   AfterBegin: "afterbegin",
@@ -19,12 +19,11 @@ const htmlToVirtualElement = htmlString => {
 const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {
   root = root.isJQL ? root.first() : root;
   if (elem) {
-    if (elem instanceof HTMLElement) {
+    if (IS(elem, HTMLElement)) {
       return root.insertAdjacentElement(position, elem);
     }
 
-    if (elem && elem instanceof Comment || elem instanceof Text) {
-
+    if (IS(elem, Comment, Text)) {
       if (position === insertPositions.BeforeEnd) {
         root.appendChild(elem);
       }
@@ -32,7 +31,6 @@ const element2DOM = (elem, root = document.body, position = insertPositions.Befo
       if (position === insertPositions.AfterBegin) {
         root.insertBefore(elem, root.firstElementChild);
       }
-
     }
   }
 };

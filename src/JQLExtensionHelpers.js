@@ -8,14 +8,21 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 const exts = allLambdas.instanceExtensions;
 const loops = allLambdas.straigthLoops;
 const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
-const IS = (obj, shouldBe) => {
-  const self = obj === 0 ?
-    Number : obj === `` ? String :
-      obj && Object.getPrototypeOf(obj || ``)?.constructor || typeof obj;
-  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self : self.name;
-};
-const isCommentOrTextNode = elem => IS(elem, Comment) || IS(elem, Text);
-const isNode = input => [Text, HTMLElement, Comment].find(ctor => IS(input, ctor));
+const ISOneOf = (obj, ...params) => !!params.find( param => IS(obj, param) );
+const IS = (obj, ...shouldBe) => {
+  if (shouldBe.length > 1) {
+    return ISOneOf(obj, ...shouldBe);
+  }
+  shouldBe = shouldBe.shift();
+  const invalid = `Invalid parameter(s)`;
+  const self = obj === 0 ? Number : obj === `` ? String :
+    !obj ? {name: invalid} :
+      Object.getPrototypeOf(obj)?.constructor;
+  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self :
+    self?.name ?? invalid;
+}
+const isCommentOrTextNode = elem => IS(elem, Comment, Text);
+const isNode = input => IS(input, Text, HTMLElement, Comment);
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => Array.isArray(input) && !input?.find(s => !isHtmlString(s));
 const isArrayOfHtmlElements = input => Array.isArray(input) && !input?.find(el => !isNode(el));
@@ -126,10 +133,6 @@ const truncate2SingleStr = (str, maxLength = 120) =>
 const time = () => ((d) =>
   `[${pad0(d.getHours())}:${pad0(d.getMinutes())}:${
     pad0(d.getSeconds())}.${pad0(d.getMilliseconds(), 3)}]`)(new Date());
-const isObjectAndNotArray = obj =>
-  (obj.constructor !== Date &&
-    !Array.isArray(obj) && JSON.stringify(obj) === "{}") ||
-  !IS(obj, String) && Object.keys(obj).length;
 const hex2Full = hex => {
   hex = (hex.trim().startsWith("#") ? hex.slice(1) : hex).trim();
   return hex.length === 3 ? [...hex].map(v => v + v).join("") : hex;
@@ -182,7 +185,6 @@ const addJQLStatics = $ => {
 export {
   loop,
   hex2RGBA,
-  isObjectAndNotArray,
   isVisible,
   addHandlerId,
   isHtmlString,

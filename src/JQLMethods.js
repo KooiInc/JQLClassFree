@@ -6,7 +6,6 @@ import {
   addHandlerId,
   isVisible,
   isNode,
-  isObjectAndNotArray,
   randomString,
   inject2DOMTree } from "./JQLExtensionHelpers.js";
 import jql from "../index.js";
@@ -14,11 +13,9 @@ import jql from "../index.js";
 const empty = el => el && (el.textContent = "");
 const compareCaseInsensitive = (key, compareTo) => key.toLowerCase().trim() === compareTo;
 const setData = (el, keyValuePairs) => {
-  el && isObjectAndNotArray(keyValuePairs) &&
+  el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
 };
-
-const inputElems = [HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement];
 
 const css = (el, keyOrKvPairs, value) => {
   const { setStyle } = jql;
@@ -206,18 +203,18 @@ const allMethods = {
       self.parent().replace(self, newChild)
       return newChild;
     },
-    val: (self, value2Set) => {
+    val: (self, newValue) => {
       const firstElem = self.first();
 
-      if (!firstElem || !inputElems.includes(firstElem?.constructor)) {
+      if (!firstElem || !IS(firstElem, HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement)) {
         return self;
       }
 
-      if (value2Set === undefined) {
+      if (newValue === undefined) {
         return firstElem.value;
       }
 
-      firstElem.value = `${value2Set}`.length < 1 ? "" : value2Set;
+      firstElem.value = `${newValue}`.length < 1 ? "" : newValue;
 
       return self;
     },

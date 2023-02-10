@@ -49,8 +49,9 @@ let reverseLogging = true;
 let logBox = () => document.querySelector(`#jql_logger`);
 let useHtml = true;
 const createLogElement = () => {
-  const setStyle = jql.createStyle(`JQLLogCSS`);
-  setStyling4Log(setStyle);
+  if (logStyling) {
+    setStyling4Log(jql.createStyle(`JQLLogCSS`));
+  }
   const jql_logger_element_name = useHtml ? `div` : `pre`;
   const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
     jql_logger_element_name} id="jql_logger"></${jql_logger_element_name}></div>`;
@@ -77,7 +78,7 @@ const setSystemLogActiveState = tf => logSystem = tf;
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 
 function setStyling4Log(setStyle) {
-  logStyling.forEach(selector => setStyle(selector));
+  logStyling?.forEach(selector => setStyle(selector));
   logStyling = undefined;
 }
 
