@@ -17,6 +17,7 @@ import {
   createElementFromHtmlString,
   insertPositions,
   systemLog,
+  IS,
 } from "./src/JQLExtensionHelpers.js";
 
 export default addJQLStatics(JQLFactory());
@@ -27,10 +28,10 @@ function JQLFactory() {
   return function(input, root = document.body, position = insertPositions.BeforeEnd) {
     const isRawHtml = isHtmlString(input);
     const isRawHtmlArray = isArrayOfHtmlStrings(input);
-    const shouldCreateElements = !(root instanceof HTMLBRElement) && isRawHtmlArray || isRawHtml;
+    const shouldCreateElements = !IS(root, HTMLBRElement) && isRawHtmlArray || isRawHtml;
     let instance = {
       collection: input2Collection(input) ?? [],
-      isVirtual: root instanceof HTMLBRElement,
+      isVirtual: IS(root, HTMLBRElement),
       isJQL: true,
       insertPositions, };
 
