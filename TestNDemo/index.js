@@ -4,9 +4,6 @@ const {virtual: $$, log, debugLog, setSystemLogActiveState} = $;
 // initialize popup
 const popup = $.popup();
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
-
-// assign a few local methods from (the static methods within) $
-// const { debugLog, log, } = $;
 debugLog.on();
 debugLog.hide();
 
