@@ -1,10 +1,9 @@
 import {  createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import allLambdas from "./JQLMethods.js";
-import {debugLog, Log, setSystemLogActiveState, systemLog} from "./JQLLog.js";
+import { debugLog, Log, setSystemLogActiveState, systemLog } from "./JQLLog.js";
 import popupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import styleFactory from "../LifeCSS/index.js";
-const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 const exts = allLambdas.instanceExtensions;
 const loops = allLambdas.straigthLoops;
 const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
@@ -20,7 +19,7 @@ const IS = (obj, ...shouldBe) => {
       Object.getPrototypeOf(obj)?.constructor;
   return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self :
     self?.name ?? invalid;
-}
+};
 const isCommentOrTextNode = elem => IS(elem, Comment, Text);
 const isNode = input => IS(input, Text, HTMLElement, Comment);
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
