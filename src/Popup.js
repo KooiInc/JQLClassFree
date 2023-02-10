@@ -75,9 +75,9 @@ function popupFactory($) {
 
     if (currentModalState.isModalActive) { return; }
 
-    const callback = evtOrCallback instanceof Function ? evtOrCallback : savedCallback;
+    const callback = IS(evtOrCallback, Function) ? evtOrCallback : savedCallback;
 
-    if (callback && callback instanceof Function) {
+    if (IS(callback, Function)) {
       savedCallback = undefined;
       return callback();
     }

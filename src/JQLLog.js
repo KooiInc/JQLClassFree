@@ -66,7 +66,7 @@ const Log = (...args) => {
     if (!log2Console && !logBox()) {
       createLogElement();
     }
-    const logLine = arg => `${arg instanceof Object ? JSON.stringify(arg, null, 2) : arg}\n`;
+    const logLine = arg => `${IS(arg, Object) ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => log2Console
       ? console.log(decodeForConsole(arg))
       : logBox().insertAdjacentHTML(

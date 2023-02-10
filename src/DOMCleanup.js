@@ -1,4 +1,4 @@
-import { truncate2SingleStr } from "./JQLExtensionHelpers.js";
+import { truncate2SingleStr, IS } from "./JQLExtensionHelpers.js";
 import * as ATTRS from "./Attributes.js";
 import cleanupTagInfo from "./HTMLTags.js";
 let logElementCreationErrors2Console = false;
@@ -30,7 +30,7 @@ const cleanupHtml = elem => {
   template.innerHTML = `<div id="placeholder">${elem.outerHTML}</div>`;
   const el2Clean = template.content.querySelector("#placeholder");
   el2Clean.querySelectorAll("*").forEach(child => {
-    const isSVG = child instanceof SVGElement;
+    const isSVG = IS(child, SVGElement);
     [...child.attributes]
       .forEach(attr => {
         const name = attr.name.trim().toLowerCase();
