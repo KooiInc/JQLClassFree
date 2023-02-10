@@ -8,15 +8,21 @@ const ExtendedNodeList = {dummy: `JSDoc dummy 'type'`};
 const exts = allLambdas.instanceExtensions;
 const loops = allLambdas.straigthLoops;
 const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
-const isCommentOrTextNode = elem => elem && elem instanceof Comment || elem instanceof Text;
-const isNode = input => [Text, HTMLElement, Comment].find(c => input instanceof c);
+const IS = (obj, shouldBe) => {
+  const self = obj === 0 ?
+    Number : obj === `` ? String :
+      obj && Object.getPrototypeOf(obj || ``)?.constructor || typeof obj;
+  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self : self.name;
+};
+const isCommentOrTextNode = elem => IS(elem, Comment) || IS(elem, Text);
+const isNode = input => [Text, HTMLElement, Comment].find(ctor => IS(input, ctor));
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => Array.isArray(input) && !input?.find(s => !isHtmlString(s));
 const isArrayOfHtmlElements = input => Array.isArray(input) && !input?.find(el => !isNode(el));
 const ElemArray2HtmlString = elems => elems?.filter(el => el)
   .reduce((acc, el) => acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
 const input2Collection = input => !input ? []
-    : input instanceof NodeList ? [...input]
+    : IS(input, NodeList) ? [...input]
       : isNode(input) ? [input]
         : isArrayOfHtmlElements(input) ? input
           : input.isJQL ? input.collection : undefined;
@@ -34,21 +40,14 @@ const setCollectionFromCssSelector = (input, root, self) => {
   return errorStr ??
     `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
-const IS = (obj, shouldBe) => {
-  const self = obj === 0 ?
-    Number : obj === `` ? String :
-      obj && Object.getPrototypeOf(obj || ``)?.constructor || typeof obj;
-  return shouldBe ? shouldBe === self : self.name;
-};
 const proxify = instance => {
   const runExt = method => (...args) =>
-    method && method instanceof Function && method(proxify(instance), ...args);
+    IS(method, Function) && method(proxify(instance), ...args);
   const runLoop = method => (...args) =>
-    method && method instanceof Function && loop(proxify(instance), el => method(el, ...args));
-  const proxyMe = { get(obj, name) {
-      return loops[name] ?
-        runLoop(loops[name]) : exts[name] ?
-          runExt(exts[name]) : obj[name]; } };
+    IS(method, Function) && loop(proxify(instance), el => method(el, ...args));
+  const method2RunTrial = name => loops[name] && runLoop(loops[name]) || exts[name] && runExt(exts[name]);
+  const proxyMe = { get: (obj, name) => method2RunTrial(name) ??
+      (IS(+name, Number) ? obj.collection?.[name] : obj[name]) };
   return new Proxy( instance, proxyMe ); };
 const randomString = (() => {
   const characters = [...Array(26)]
@@ -86,7 +85,7 @@ const loop = (instance, callback) => {
 };
 const inject2DOMTree = (collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
   collection.reduce((acc, elem) => {
-    const created = elem && isNode(elem) && element2DOM(elem, root, position);
+    const created = isNode(elem) && element2DOM(elem, root, position);
     return created ? [...acc, created] : acc;
   }, []);
 const addHandlerId = instance => {
@@ -130,7 +129,7 @@ const time = () => ((d) =>
 const isObjectAndNotArray = obj =>
   (obj.constructor !== Date &&
     !Array.isArray(obj) && JSON.stringify(obj) === "{}") ||
-  obj.constructor !== String && Object.keys(obj).length;
+  !IS(obj, String) && Object.keys(obj).length;
 const hex2Full = hex => {
   hex = (hex.trim().startsWith("#") ? hex.slice(1) : hex).trim();
   return hex.length === 3 ? [...hex].map(v => v + v).join("") : hex;
@@ -149,8 +148,8 @@ const addJQLStatics = $ => {
   const createStyle = id => styleFactory( { createWithId: id } );
   const handle = HandleFactory($);
   const delegate = (type, origin, ...handlers) => {
-    if (!origin || origin instanceof Function) {
-      origin instanceof Function && handlers.push(origin);
+    if (IS(origin, Function)) {
+      handlers.push(origin);
       return handle(null, type, null, ...handlers);
     }
     return handle(null, type, origin, ...handlers);
@@ -169,8 +168,8 @@ const addJQLStatics = $ => {
     node: (selector, root = document.body) => document.querySelector(selector, root),
     nodes: (selector, root = document.body) => document.querySelectorAll(selector, root),
     delegate: (type, origin, ...handlers) => {
-      if (!origin || origin instanceof Function) {
-        origin instanceof Function && handlers.push(origin);
+      if (IS(origin, Function)) {
+        handlers.push(origin);
         return handle(null, type, null, ...handlers);
       }
       return handle(null, type, origin, ...handlers);

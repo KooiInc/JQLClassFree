@@ -58,7 +58,7 @@ const allMethods = {
     toggleClass: (el, className) => el.classList.toggle(className),
     toggleStyleFragments: (el, keyValuePairs) =>
       el && Object.entries(keyValuePairs).forEach(([key, value]) => {
-        if (value instanceof Function) {
+        if (IS(value, Function)) {
           value = value(el);
         }
 
@@ -202,14 +202,14 @@ const allMethods = {
       return self;
     },
     replaceMe: (self, newChild) => {
-      newChild = newChild instanceof HTMLElement ? self.constructor(newChild) : newChild;
+      newChild = IS(newChild, HTMLElement) ? jql(newChild) : newChild;
       self.parent().replace(self, newChild)
       return newChild;
     },
     val: (self, value2Set) => {
       const firstElem = self.first();
 
-      if (!firstElem || !inputElems.includes(firstElem["constructor"])) {
+      if (!firstElem || !inputElems.includes(firstElem?.constructor)) {
         return self;
       }
 
@@ -222,7 +222,7 @@ const allMethods = {
       return self;
     },
     parent: self => self.collection.length && self.first().parentNode &&
-      self.constructor(self.first().parentNode) || self,
+      jql(self.first().parentNode) || self,
     append: (self, ...elems2Append) => {
       if (self.collection.length && elems2Append.length) {
 
@@ -235,7 +235,7 @@ const allMethods = {
 
           if (isNode(elems2Append[i])) {
             self.collection.forEach(el =>
-              el.appendChild(elem instanceof Comment ? elem : elem.cloneNode(true)));
+              el.appendChild(is(elem, Comment) ? elem : elem.cloneNode(true)));
             return self;
           }
 
@@ -245,7 +245,7 @@ const allMethods = {
             elem.remove();
             elems.forEach( e2a =>
               self.collection.forEach( el =>
-                el.appendChild( e2a instanceof Comment ? e2a : e2a.cloneNode(true) ) ) );
+                el.appendChild( IS(e2a, Comment) ? e2a : e2a.cloneNode(true) ) ) );
           }
         }
       }
@@ -267,7 +267,7 @@ const allMethods = {
           if (isNode(elem2Prepend)) {
             self.collection.forEach(el =>
               el.insertBefore(
-                elem2Prepend instanceof Comment ? elem2Prepend : elem2Prepend.cloneNode(true), el.firstChild));
+                IS(elem2Prepend, Comment) ? elem2Prepend : elem2Prepend.cloneNode(true), el.firstChild));
             return self;
           }
 
@@ -276,7 +276,7 @@ const allMethods = {
             elem2Prepend.remove();
             elems.forEach(e2a =>
               self.collection.forEach(el =>
-                el && el.insertBefore(e2a instanceof Comment ? e2a : e2a.cloneNode(true), el.firstChild)));
+                el && el.insertBefore(IS(e2a, Comment) ? e2a : e2a.cloneNode(true), el.firstChild)));
           }
         }
       }
@@ -345,8 +345,8 @@ const allMethods = {
       const found = self.collection.reduce((acc, el) =>
         [...acc, [...el.querySelectorAll(selector)]], [])
         .flat()
-        .filter(el => el && el instanceof HTMLElement);
-      return found.length && jql(found[0]) || $();
+        .filter(el => IS(el, HTMLElement));
+      return found.length && jql(found[0]) || jql();
     },
     prop: (self, property, value) => {
       if (!value) {
@@ -377,7 +377,7 @@ const allMethods = {
         const nwElement = htmlValue.isJQL
           ? htmlValue.first() : createElementFromHtmlString(`<div>${htmlValue}</div>`);
 
-        if (!(nwElement instanceof Comment)) {
+        if (!IS(nwElement, Comment)) {
           const cb = el => el.innerHTML = append ? el.innerHTML + nwElement.innerHTML : nwElement.innerHTML;
           return loop(self, cb);
         }
