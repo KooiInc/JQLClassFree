@@ -1,30 +1,26 @@
 import {  createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
-import allLambdas from "./JQLMethods.js";
+import allMethods from "./JQLMethods.js";
 import { debugLog, Log, setSystemLogActiveState, systemLog } from "./JQLLog.js";
 import popupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import styleFactory from "../LifeCSS/index.js";
-const exts = allLambdas.instanceExtensions;
-const loops = allLambdas.straigthLoops;
+const exts = allMethods.instanceExtensions;
+const loops = allMethods.straigthLoops;
 const pad0 = (nr, n=2) => `${nr}`.padStart(n, `0`);
 const ISOneOf = (obj, ...params) => !!params.find( param => IS(obj, param) );
 const IS = (obj, ...shouldBe) => {
-  if (shouldBe.length > 1) {
-    return ISOneOf(obj, ...shouldBe);
-  }
+  if (shouldBe.length > 1) { return ISOneOf(obj, ...shouldBe); }
   shouldBe = shouldBe.shift();
   const invalid = `Invalid parameter(s)`;
   const self = obj === 0 ? Number : obj === `` ? String :
-    !obj ? {name: invalid} :
-      Object.getPrototypeOf(obj)?.constructor;
-  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self :
-    self?.name ?? invalid;
+    !obj ? {name: invalid} : Object.getPrototypeOf(obj)?.constructor;
+  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self : self?.name ?? invalid;
 };
 const isCommentOrTextNode = elem => IS(elem, Comment, Text);
 const isNode = input => IS(input, Text, HTMLElement, Comment);
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
-const isArrayOfHtmlStrings = input => Array.isArray(input) && !input?.find(s => !isHtmlString(s));
-const isArrayOfHtmlElements = input => Array.isArray(input) && !input?.find(el => !isNode(el));
+const isArrayOfHtmlStrings = input => IS(input, Array) && !input?.find(s => !isHtmlString(s));
+const isArrayOfHtmlElements = input => IS(input, Array) && !input?.find(el => !isNode(el));
 const ElemArray2HtmlString = elems => elems?.filter(el => el)
   .reduce((acc, el) => acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
 const input2Collection = input => !input ? []
@@ -144,9 +140,18 @@ const hex2RGBA = function (hex, opacity = 100) {
     parseInt(hex.slice(2, 4), 16)}, ${
     parseInt(hex.slice(-2), 16)}${op ? `, ${opacity / 100}` : ""})`;
 };
+const defaultStaticMethods = {
+  debugLog,
+  log: Log,
+  setSystemLogActiveState,
+  insertPositions,
+  text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
+  node: (selector, root = document.body) => document.querySelector(selector, root),
+  nodes: (selector, root = document.body) => document.querySelectorAll(selector, root),
+};
 const addJQLStatics = $ => {
   const virtual = html => $(html, document.createElement("br"));
-  const setStyle = styleFactory( {createWithId: `JQLStylesheet`} );
+  const setStyle = styleFactory( { createWithId: `JQLStylesheet` } );
   const createStyle = id => styleFactory( { createWithId: id } );
   const handle = HandleFactory($);
   const delegate = (type, origin, ...handlers) => {
@@ -157,18 +162,12 @@ const addJQLStatics = $ => {
     return handle(null, type, origin, ...handlers);
   };
   const staticMethods = {
+    ...defaultStaticMethods,
     setStyle,
     createStyle,
     virtual,
-    debugLog,
-    log: Log,
     handle,
-    setSystemLogActiveState,
-    insertPositions,
     popup: () => popupFactory($),
-    text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-    node: (selector, root = document.body) => document.querySelector(selector, root),
-    nodes: (selector, root = document.body) => document.querySelectorAll(selector, root),
     delegate: (type, origin, ...handlers) => {
       if (IS(origin, Function)) {
         handlers.push(origin);

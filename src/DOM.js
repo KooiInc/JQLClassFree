@@ -9,11 +9,11 @@ const insertPositions = {
   AfterBegin: "afterbegin",
   BeforeEnd: "beforeend",
   AfterEnd: "afterend" };
+const placeholderNode = document.createElement("div");
 const htmlToVirtualElement = htmlString => {
-  const placeholder = Object.assign(document.createElement("div"), { id:"placeholder", innerHTML: htmlString.trim() });
-
-  return placeholder.childNodes.length
-    ? cleanupHtml(placeholder)
+  placeholderNode.innerHTML = htmlString.trim();
+  return placeholderNode.childNodes.length
+    ? cleanupHtml(placeholderNode)
     : undefined;
 };
 const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {
@@ -36,11 +36,12 @@ const element2DOM = (elem, root = document.body, position = insertPositions.Befo
 };
 const createElementFromHtmlString = htmlStr => {
   htmlStr = htmlStr.trim();
-  let nwElem = htmlToVirtualElement(htmlStr);
 
   if (htmlStr.startsWith(`<!--`) && htmlStr.endsWith(`-->`)) {
     return document.createComment(htmlStr.replace(/<!--|-->$/g, ''));
   }
+
+  const nwElem = htmlToVirtualElement(htmlStr);
 
   if (!nwElem.children.length) {
       return createElementFromHtmlString(`<span data-jqlcreationerror="1">${truncateHtmlStr(htmlStr, 60)}</span>`);
