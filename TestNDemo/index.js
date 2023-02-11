@@ -292,10 +292,11 @@ function allComments(root, result = []) {
 async function injectCode() {
   const source = await fetch("./index.js").then(r => r.text());
   $(`#JQLRoot`)
-    .append( $(`
+  .append( $(`
     <div class="upDownFader" id="code">
-    <pre class="language-javascript"><code class="language-javascript js line-numbers">${
-      source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`)}</code></pre></div>`));
+      <pre class="language-javascript"><code class="language-javascript js line-numbers">${
+        source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`)}</code></pre>
+    </div>`));
 }
 
 function showStyling(styleId, bttn) {
@@ -320,7 +321,6 @@ function showStyling(styleId, bttn) {
         .replace(/\n}/, `\n}`)}\n}`
       : `${mapRule(rule, selectr)}`;
   }
-
   const mappedCSS = [...rules].map(mapping).join(`\n\n`);
   return popup.create($$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
     .prepend($$(`<p/>`).append(bttn)));
