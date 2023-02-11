@@ -94,8 +94,10 @@ $([`<notallowed id="removal_immanent"></notallowed>`,
   .appendTo(JQLRoot);
 
 // create a few buttons. Some already contain an event handler (delegated)
-const cssPopupBttn = $.virtual(`<button>show popup css</button>`)
-    .on(`click`, _ => showStyling(`JQLPopupCSS` ));
+const cssDefaultBttn = $$(`<button id="defaultCSS">show default css</button>`)
+const cssPopupBttn = $$(`<button id="popupCSS">show popup css</button>`)
+cssPopupBttn.on(`click`, () => showStyling(`JQLPopupCSS`, cssDefaultBttn));
+cssDefaultBttn.on(`click`, () => showStyling(`JQLStylesheet`, cssPopupBttn));
 
 const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
     $$(`<button id="logBttn" data-on="0" title="show/hide the logged activities"/>`),
@@ -104,7 +106,7 @@ const bttnBlock = $(`<p id="bttnblock"></p>`).append(...[
       .prop(`title`, `Show content of comment elements in a popup`),
     $$(`<button id="showCSS">Show custom CSS</button>`)
       .prop(`title`, `Show the dynamically created styling in a popup`)
-      .on(`click`, _ => showStyling(`JQLStylesheet`, cssPopupBttn.first().outerHTML)),
+      .on(`click`, _ => showStyling(`JQLStylesheet`, cssPopupBttn)),
     $$(`<button>Modal popup demo</button`).on(`click`, modalDemo),
     $$(`<button>Github</button>`)
       .on(`click`, () => {
@@ -228,8 +230,10 @@ function getDelegates4Document() {
           );
           $(self).setData({timer: setTimeout(() => self.find$(`[data-funny]`)?.remove(), 2500)});
           log(`That's funny ... ${self.find$(`[data-funny]`).html()}`);
-        },]
-    }, {
+        },
+      ]
+    },
+    {
       target: `#logBttn`,
       handlers: [(_, self) => logActivation(self, !+(self.getData(`on`, 1))),],
     }, {
@@ -294,13 +298,11 @@ async function injectCode() {
       source.trim().replace(/&/g, `&amp;`).replace(/</g, `&lt;`)}</code></pre></div>`));
 }
 
-function showStyling(styleId, bttnHtml) {
+function showStyling(styleId, bttn) {
   const theStyle = $(`style#${styleId}`);
-  if (theStyle.isEmpty()) {
-    return;
-  }
+  if (theStyle.isEmpty()) { return; }
   const getMediaRuleSelector = rule => rule.cssText.split(/\{/).shift().trim();
-  const rules = theStyle.first().sheet.cssRules;
+  const rules = theStyle[0].sheet.cssRules;
   const mapRule = (rule, selector) => `${selector} {\n  ${
     rule.cssText
       .split(/[{}]/)[1]
@@ -319,9 +321,9 @@ function showStyling(styleId, bttnHtml) {
       : `${mapRule(rule, selectr)}`;
   }
 
-  const mapped = [...rules].map(mapping).join(`\n\n`);
-  popup.create($([`${bttnHtml ? `<p>${bttnHtml}</p>` : `<span/>`}`,
-    `<div class="cssView"><h3>style#${styleId} current content</h3>${mapped}</div>`]));
+  const mappedCSS = [...rules].map(mapping).join(`\n\n`);
+  return popup.create($$(`<div class="cssView"><h3>style#${styleId} current content</h3>${mappedCSS}</div>`)
+    .prepend($$(`<p/>`).append(bttn)));
 }
 
 function styleRules() {
