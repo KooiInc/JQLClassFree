@@ -1,6 +1,6 @@
 import jql from "../index.js";
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
-import {IS, time, isVisible} from "./JQLExtensionHelpers.js";
+import {IS, logTime, isVisible} from "./JQLExtensionHelpers.js";
 let logStyling = await fetch(`../src/Resource/defaultLogStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
 const debugLog = {
   get isOn() { return useLogging; },
@@ -71,7 +71,7 @@ const Log = (...args) => {
       ? console.log(decodeForConsole(arg))
       : logBox().insertAdjacentHTML(
           reverseLogging ? `afterbegin` : `beforeend`,
-          `${time()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
+          `${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
 };
 const setSystemLogActiveState = tf => logSystem = tf;
