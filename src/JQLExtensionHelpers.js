@@ -16,13 +16,30 @@ const IS = (obj, ...shouldBe) => {
     !obj ? {name: invalid} : Object.getPrototypeOf(obj)?.constructor;
   return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self : self?.name ?? invalid;
 };
+const randomNr = (max, min = 0) => {
+  [max, min] = [Math.floor(max), min = Math.ceil(min)];
+  return Math.floor( ([...crypto.getRandomValues(new Uint32Array(1))].shift() / 2 ** 32 )
+    * (max - min + 1) + min );
+};
+const shuffle = array => {
+  let i = array.length;
+  while (i--) {
+    const ri = randomNr(i);
+    [array[i], array[ri]] = [array[ri], array[i]];
+  }
+  return array;
+};
+const characters4RandomString = shuffle([...Array(26)]
+  .map((x, i) => String.fromCharCode(i + 65))
+  .concat([...Array(26)].map((x, i) => String.fromCharCode(i + 97)))
+  .concat([...Array(10)].map((x, i) => `${i}`)));
 const isCommentOrTextNode = elem => IS(elem, Comment, Text);
 const isNode = input => IS(input, Text, HTMLElement, Comment);
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => IS(input, Array) && !input?.find(s => !isHtmlString(s));
 const isArrayOfHtmlElements = input => IS(input, Array) && !input?.find(el => !isNode(el));
-const ElemArray2HtmlString = elems => elems?.filter(el => el)
-  .reduce((acc, el) => acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
+const ElemArray2HtmlString = elems => elems?.filter(el => el).reduce((acc, el) =>
+  acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
 const input2Collection = input => !input ? []
     : IS(input, NodeList) ? [...input]
       : isNode(input) ? [input]
@@ -39,8 +56,7 @@ const setCollectionFromCssSelector = (input, root, self) => {
     errorStr =  `Invalid CSS querySelector. [${input}]`;
   }
 
-  return errorStr ??
-    `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
+  return errorStr ?? `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
 };
 const proxify = instance => {
   const runExt = method => (...args) =>
@@ -51,29 +67,7 @@ const proxify = instance => {
   const proxyMe = { get: (obj, name) => method2RunTrial(name) ??
       (IS(+name, Number) ? obj.collection?.[name] : obj[name]) };
   return new Proxy( instance, proxyMe ); };
-const randomString = (() => {
-  const characters = [...Array(26)]
-    .map((x, i) => String.fromCharCode(i + 65))
-    .concat([...Array(26)].map((x, i) => String.fromCharCode(i + 97)))
-    .concat([...Array(10)].map((x, i) => `${i}`));
-  const getCharacters = excludes =>
-    excludes && characters.filter(c => !~excludes.indexOf(c)) || characters;
-  const random = (len = 12, excludes = []) => {
-    const chars = getCharacters(excludes);
-    return [...Array(len)]
-      .map(() => chars[Math.floor(Math.random() * chars.length)])
-      .join("");
-  };
-
-  return {
-    random,
-    randomHtmlElementId: (len = 12, excludes = []) => {
-      const charsWithoutNumbers = getCharacters(excludes.concat('0123456789'.split("")));
-      const firstChr = charsWithoutNumbers[Math.floor(Math.random() * charsWithoutNumbers.length)];
-      return firstChr.concat(random(len - 1, excludes));
-    },
-  };
-})();
+const randomString = () => `_${shuffle(characters4RandomString).slice(0, 8).join(``)}`;
 const toDashedNotation = str2Convert =>
   str2Convert
     .replace(/[A-Z]/g, a => `-${a.toLowerCase()}`)
@@ -91,7 +85,7 @@ const inject2DOMTree = (collection = [], root = document.body, position = insert
     return created ? [...acc, created] : acc;
   }, []);
 const addHandlerId = instance => {
-  const handleId = instance.first().dataset.hid || randomString.random(8);
+  const handleId = instance.first().dataset.hid || `HID${randomString()}`;
   instance.setData({hid: handleId});
   return `[data-hid="${handleId}"]`;
 };

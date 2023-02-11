@@ -31,7 +31,7 @@ const css = (el, keyOrKvPairs, value) => {
   }
 
   const classExists = ([...el.classList].find(c => c.startsWith(`JQLCreated`) || nwClass && c === nwClass));
-  nwClass = classExists || nwClass || `JQLCreated_${randomString.randomHtmlElementId(12)}`;
+  nwClass = classExists || nwClass || `JQLCreated${randomString()}`;
   setStyle(`.${nwClass}`, keyOrKvPairs);
   el.classList.add(nwClass);
 };
