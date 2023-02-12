@@ -19,9 +19,9 @@ function popupFactory($) {
   const currentModalState = (() =>{
     let currentPopupIsModal = false;
     return {
-      set isModal(tf) { currentPopupIsModal = tf; },
+      set isModal({state = false}) { currentPopupIsModal = state; },
       get isModal() { return currentPopupIsModal; },
-      get isModalActive() { return currentPopupIsModal && popupBox.hasClass(`active`) && stillOpen() },
+      get isActive() { return currentPopupIsModal && popupBox.hasClass(`active`) && stillOpen() },
     };
   })();
   const createElements = _ => {
@@ -50,8 +50,8 @@ function popupFactory($) {
     }
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
-  const doCreate = (message, reallyModal, callback) => {
-    currentModalState.isModal = reallyModal;
+  const doCreate = ({message, reallyModal, callback}) => {
+    currentModalState.isModal = {state: reallyModal};
     savedCallback = callback;
 
     if (!message.isJQL && !IS(message, String)) {
@@ -62,9 +62,9 @@ function popupFactory($) {
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
   const create = (message, reallyModal = false, callback = undefined) =>
-    !currentModalState.isModalActive && doCreate(message, reallyModal, callback);
+    !currentModalState.isActive && doCreate({message, reallyModal, callback});
   const createTimed = (message, closeAfter = 2, callback = null ) => {
-    if (currentModalState.isModalActive) { return; }
+    if (currentModalState.isActive) { return; }
     deActivate();
     create(message, false, callback);
     const remover = callback ? () => remove(callback) : remove;
@@ -73,7 +73,7 @@ function popupFactory($) {
   function remove(evtOrCallback) {
     endTimer();
 
-    if (currentModalState.isModalActive) { return; }
+    if (currentModalState.isActive) { return; }
 
     const callback = IS(evtOrCallback, Function) ? evtOrCallback : savedCallback;
 
