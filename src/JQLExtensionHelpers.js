@@ -1,5 +1,5 @@
 import { createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
-import { debugLog, Log, setSystemLogActiveState, systemLog } from "./JQLLog.js";
+import { debugLog, Log, setSystemLog, systemLog } from "./JQLLog.js";
 import allMethods from "./JQLMethods.js";
 import popupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
@@ -71,7 +71,7 @@ const getAllDataAttributeValues = el => {
 const defaultStaticMethods = {
   debugLog,
   log: Log,
-  setSystemLogActiveState,
+  setSystemLog,
   insertPositions,
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
   node: (selector, root = document.body) => document.querySelector(selector, root),
