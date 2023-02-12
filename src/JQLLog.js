@@ -7,6 +7,10 @@ let useLogging = false;
 let log2Console = false;
 let reverseLogging = true;
 let useHtml = true;
+const setStyling4Log = setStyle => {
+  logStyling?.forEach(selector => setStyle(selector));
+  logStyling = undefined;
+};
 let logBox = () => document.querySelector(`#jql_logger`);
 const createLogElement = () => {
   if (logStyling) {
@@ -34,9 +38,13 @@ const Log = (...args) => {
           `${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
 };
+const logActive = {
+  on() {  useLogging = true; Log(`Logging activated`); },
+  off() { useLogging = false; console.log(`Logging deactivated`) },
+}
 const setSystemLog = {
-  on() { logSystem = true; systemLog(`System messages are logged`); return logSystem; },
-  off() { logSystem = false; Log(`System messages are NOT logged`); return logSystem; },
+  on() { logSystem = true; },
+  off() { logSystem = false; },
 };
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 const debugLog = {
@@ -44,15 +52,17 @@ const debugLog = {
   isVisible: () => isVisible(logBox()),
   on() {
     useLogging = true;
+    setSystemLog.on();
     if (!log2Console) {
       const box = logBox() || createLogElement();
       box?.parentNode["classList"].add(`visible`);
     }
-    Log(`${logTime()} logging started (to ${log2Console ? `console` : `document`})`);
+    Log(`Debug logging started (to ${log2Console ? `console` : `document`}). All calls to [jql instance] are logged.`);
   },
   off() {
     if (logBox()) {
-      Log(`${logTime()} debug logging stopped`);
+      setSystemLog.off();
+      Log(`Debug logging stopped`);
       logBox().parentNode.classList.remove(`visible`);
     }
     useLogging = false;
@@ -61,12 +71,12 @@ const debugLog = {
     on: () => {
       log2Console = true;
       useLogging = true;
-      Log(`${logTime()} debug logging everything to console`);
+      Log(`Debug logging everything to console`);
     },
     off() {
       log2Console = false;
       useLogging = false;
-      Log(`${logTime()} debug logging disabled`);
+      Log(`Debug logging disabled`);
     }
   },
   remove: () => {
@@ -79,11 +89,11 @@ const debugLog = {
   reversed: {
     on: () => {
       reverseLogging = true;
-      Log(`${logTime()} Reverse logging reset: now logging bottom to top (latest first)`);
+      Log(`Reverse logging reset: now logging bottom to top (latest first)`);
     },
     off: () => {
       reverseLogging = false;
-      Log(`${logTime()} Reverse logging reset: now logging top to bottom (latest last)`);
+      Log(`Reverse logging reset: now logging top to bottom (latest last)`);
     },
   },
   clear() {
@@ -94,10 +104,4 @@ const debugLog = {
 };
 
 
-function setStyling4Log(setStyle) {
-  logStyling?.forEach(selector => setStyle(selector));
-  logStyling = undefined;
-}
-
-
-export { Log, debugLog, setSystemLog, systemLog };
+export { Log, debugLog, systemLog };

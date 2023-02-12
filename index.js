@@ -23,7 +23,7 @@ import {
 export default addJQLStatics(JQLFactory());
 
 function JQLFactory() {
-  const logLineLength = 80;
+  const logLineLength = 70;
 
   return function(input, root = document.body, position = insertPositions.BeforeEnd) {
     const isRawHtml = isHtmlString(input);
@@ -36,12 +36,12 @@ function JQLFactory() {
       insertPositions, };
 
     const isRawElemCollection = isArrayOfHtmlElements(instance.collection);
-
-    const logStr = (`(JQL log) raw input: [${
-      truncateHtmlStr(isRawHtmlArray
-        ? input.join(``)
-        : isRawElemCollection ? `Element(s): ${instance.collection.map(el => el.outerHTML || el.textContent).join(``)}`
-          : input, logLineLength)}]`);
+    const logStr = `input =&gt; ${
+      isRawHtmlArray
+        ? `"${truncateHtmlStr(input.join(``), logLineLength)}"`
+        : !shouldCreateElements && isRawElemCollection ? `element collection [${
+            truncateHtmlStr( instance.collection.map(el => el.outerHTML || el.textContent).join(``), logLineLength)}]`
+          : `"${truncateHtmlStr(input, logLineLength)}"`}`;
 
     if (instance.collection.length && isRawElemCollection) {
       systemLog(logStr);
@@ -57,8 +57,9 @@ function JQLFactory() {
       const errors = instance.collection.filter( el => el.dataset?.jqlcreationerror );
       instance.collection = instance.collection.filter(el => !el.dataset?.jqlcreationerror);
 
-      systemLog(`${logStr}\n  Created ${instance.isVirtual ? ` VIRTUAL` : ``} (outerHTML truncated) [${
-        truncateHtmlStr(ElemArray2HtmlString(instance.collection) ||
+      systemLog(`${logStr}`);
+      systemLog(`*Created ${instance.isVirtual ? `VIRTUAL ` : ``}[${
+        truncateHtmlStr(ElemArray2HtmlString(instance.collection) || 
           "sanitized: no elements remaining", logLineLength)}]`);
 
       if (errors.length) {
@@ -74,7 +75,7 @@ function JQLFactory() {
   }
 
     const forLog = setCollectionFromCssSelector(input, root, instance);
-    systemLog(forLog);
+    systemLog(`input => ${forLog}`);
     return proxify(instance);
   }
 }

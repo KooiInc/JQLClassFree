@@ -1,5 +1,5 @@
 import { createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
-import { debugLog, Log, setSystemLog, systemLog } from "./JQLLog.js";
+import { debugLog, Log, systemLog } from "./JQLLog.js";
 import allMethods from "./JQLMethods.js";
 import popupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
@@ -13,8 +13,10 @@ const isNode = input => IS(input, Text, HTMLElement, Comment);
 const isHtmlString = input => IS(input, String) && /^<|>$/.test(`${input}`.trim());
 const isArrayOfHtmlStrings = input => IS(input, Array) && !input?.find(s => !isHtmlString(s));
 const isArrayOfHtmlElements = input => IS(input, Array) && !input?.find(el => !isNode(el));
+const isComment = input => IS(input, Comment);
 const ElemArray2HtmlString = elems => elems?.filter(el => el).reduce((acc, el) =>
-  acc.concat(isCommentOrTextNode(el) ? el.textContent : el.outerHTML), ``);
+  acc.concat(isComment(el) ? `<!--${el.textContent}-->` : isCommentOrTextNode(el) ?
+    el.textContent : el.outerHTML), ``);
 const input2Collection = input => !input ? []
     : IS(input, NodeList) ? [...input]
       : isNode(input) ? [input]
@@ -25,7 +27,7 @@ const setCollectionFromCssSelector = (input, root, self) => {
   let errorStr = undefined;
   try { self.collection = [...selectorRoot.querySelectorAll(input)]; }
   catch (err) { errorStr =  `Invalid CSS querySelector. [${input}]`; }
-  return errorStr ?? `(JQL log) css querySelector [${input}], output ${self.collection.length} element(s)`;
+  return errorStr ?? `CSS querySelector "${input}", output ${self.collection.length} element(s)`;
 };
 const loop = (instance, callback) => {
   const cleanCollection = instance.collection.filter(el => !isCommentOrTextNode(el));
@@ -71,7 +73,6 @@ const getAllDataAttributeValues = el => {
 const defaultStaticMethods = {
   debugLog,
   log: Log,
-  setSystemLog,
   insertPositions,
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
   node: (selector, root = document.body) => document.querySelector(selector, root),

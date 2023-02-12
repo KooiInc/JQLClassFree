@@ -27,7 +27,7 @@ const truncateHtmlStr = (str, maxLength = 120) => str.trim()
   .replace(/>\s+</g, `><`)
   .replace(/</g, `&lt;`)
   .replace(/\s{2,}/g, ` `)
-  .replace(/\n/g, `\\n`) + (str.length > maxLength ? `&hellip;` : ``).trim();
+  .replace(/\n/g, `\\n`) + (str.length > maxLength ? ` &hellip;` : ``).trim();
 const toDashedNotation = str2Convert =>str2Convert.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`).replace(/^-|-$/, ``);
 const IS = (obj, ...shouldBe) => {
   if (shouldBe.length > 1) { return ISOneOf(obj, ...shouldBe); }
@@ -38,7 +38,7 @@ const IS = (obj, ...shouldBe) => {
 };
 const randomString = () => `_${shuffle(characters4RandomString).slice(0, 8).join(``)}`;
 const truncate2SingleStr = (str, maxLength = 120) =>
-  truncateHtmlStr(str, maxLength).replace(/&lt;/g, `<`).replace(/&hellip;/g, `...`);
+  truncateHtmlStr(str, maxLength).replace(/&lt;/g, `<`);
 const logTime = () => ((d) =>
   `[${pad0(d.getHours())}:${pad0(d.getMinutes())}:${
     pad0(d.getSeconds())}.${pad0(d.getMilliseconds(), 3)}]`)(new Date());

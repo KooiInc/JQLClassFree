@@ -1,5 +1,5 @@
 import $ from "../Bundle/jql.min.js";
-const {virtual: $$, log, debugLog, setSystemLog} = $;
+const {virtual: $$, log, debugLog} = $;
 
 // initialize popup
 const popup = $.popup();
@@ -7,9 +7,8 @@ const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 
 // activate logging all JQL events (hidden)
 debugLog.on();
+debugLog.reversed.off();
 debugLog.hide();
-setSystemLog.on();
-
 const apiLinkPrefix = `https://kooiinc.github.io/JQLDoc/`;
 
 // Some methods used in handler delegates
