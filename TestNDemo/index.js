@@ -1,14 +1,14 @@
 import $ from "../Bundle/jql.min.js";
-const {virtual: $$, log, debugLog, setSystemLogActiveState} = $;
+const {virtual: $$, log, debugLog, setSystemLog} = $;
 
 // initialize popup
 const popup = $.popup();
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
+
+// activate logging all JQL events (hidden)
 debugLog.on();
 debugLog.hide();
-
-// activate logging JQL events
-setSystemLogActiveState(true);
+setSystemLog.on();
 
 const apiLinkPrefix = `https://kooiinc.github.io/JQLDoc/`;
 
