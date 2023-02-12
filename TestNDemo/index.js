@@ -1,5 +1,7 @@
-//import $ from "../Bundle/jql.min.js";
-import $ from "../index.js";
+import $ from "../Bundle/jql.min.js";
+if (location.host.startsWith(`dev`)) {
+  document.title += ` DEV`;
+}
 const {virtual: $$, log, debugLog} = $;
 
 // initialize popup
