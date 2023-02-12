@@ -1,7 +1,7 @@
 import jql from "../index.js";
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
 import {IS, logTime, isVisible} from "./JQLExtensionHelpers.js";
-let logStyling = await fetch(`../src/Resource/defaultLogStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
+import {logStyling} from "./EmbedResources.js";
 let logSystem = false;
 let useLogging = false;
 let log2Console = false;
@@ -9,7 +9,6 @@ let reverseLogging = true;
 let useHtml = true;
 const setStyling4Log = setStyle => {
   logStyling?.forEach(selector => setStyle(selector));
-  logStyling = undefined;
 };
 let logBox = () => document.querySelector(`#jql_logger`);
 const createLogElement = () => {

@@ -1,5 +1,4 @@
-let allTags = await fetch(`../src/Resource/defaultTagPermissions.json`).then(r => r.json());
-
+import {allTags} from "./EmbedResources.js";
 export default {
   isAllowed(elem) {
     const nodeName = elem?.nodeName.toLowerCase() || `none`;

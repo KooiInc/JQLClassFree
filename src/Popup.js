@@ -1,7 +1,7 @@
 import {IS} from "./JQLExtensionHelpers.js";
-
+import {popupStyling} from "./EmbedResources.js";
 export default popupFactory;
-let popupStyling = await fetch(`../src/Resource/defaultPopupStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
+
 function popupFactory($) {
   const wrappedBody = $(document.body);
   const setStyle = $.createStyle(`JQLPopupCSS`);
@@ -101,5 +101,4 @@ function popupFactory($) {
 
 function initStyling(setStyle) {
   popupStyling.forEach(declaration => setStyle(declaration));
-  popupStyling = undefined;
 }

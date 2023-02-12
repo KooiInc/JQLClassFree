@@ -1,6 +1,6 @@
 import { truncate2SingleStr, IS } from "./JQLExtensionHelpers.js";
 import cleanupTagInfo from "./HTMLTags.js";
-const ATTRS = await fetch(`../src/Resource/attributeStore.json`).then(r => r.json());
+import {ATTRS} from "./EmbedResources.js";
 let logElementCreationErrors2Console = false;
 const allowUnknownHtmlTags = {
   on: () => cleanupTagInfo.lenient = true,
