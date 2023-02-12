@@ -364,7 +364,6 @@ const allMethods = {
 
       return self;
     },
-
     html: (self, htmlValue, append) => {
       if (htmlValue === undefined) {
         return self.first()?.innerHTML;
