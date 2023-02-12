@@ -2,6 +2,12 @@ import jql from "../index.js";
 import {createElementFromHtmlString, element2DOM, insertPositions} from "./DOM.js";
 import {IS, logTime, isVisible} from "./JQLExtensionHelpers.js";
 let logStyling = await fetch(`../src/Resource/defaultLogStyling.txt`).then(r => r.text()).then(r => r.split(`~RULE~`));
+let logSystem = false;
+let useLogging = false;
+let log2Console = false;
+let reverseLogging = true;
+let useHtml = true;
+let logBox = () => document.querySelector(`#jql_logger`);
 const debugLog = {
   get isOn() { return useLogging; },
   isVisible: () => isVisible(logBox()),
@@ -15,19 +21,24 @@ const debugLog = {
   },
   off() {
     if (logBox()) {
-      Log(`Logging stopped`);
-      logBox()?.parentNode.classList.remove(`visible`);
+      Log(`${logTime()} debug logging stopped`);
+      logBox().parentNode.classList.remove(`visible`);
     }
     useLogging = false;
   },
-  toConsole(console = false) {
-    log2Console = console;
-    useLogging = console;
-    console && document.querySelector(`#logBox`)?.remove();
+  toConsole: {
+    on: () => {
+      log2Console = true;
+      useLogging = true;
+    },
+    off() {
+      log2Console = false;
+      useLogging = false;
+    }
   },
   remove: () => {
     useLogging = false;
-    document.querySelector(`#logBox`).remove();
+    logBox()?.remove();
   },
   hide: () => logBox()?.parentNode.classList.remove(`visible`),
   show: () => logBox()?.parentNode.classList.add(`visible`),
@@ -39,15 +50,9 @@ const debugLog = {
   clear() {
     const box = logBox();
     box && (box.textContent = ``);
-    Log(`Cleared`);
+    Log(`${logTime()} Logging cleared`);
   }
 };
-let logSystem = false;
-let useLogging = false;
-let log2Console = false;
-let reverseLogging = true;
-let logBox = () => document.querySelector(`#jql_logger`);
-let useHtml = true;
 const createLogElement = () => {
   if (logStyling) {
     setStyling4Log(jql.createStyle(`JQLLogCSS`));
