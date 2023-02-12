@@ -8,51 +8,6 @@ let log2Console = false;
 let reverseLogging = true;
 let useHtml = true;
 let logBox = () => document.querySelector(`#jql_logger`);
-const debugLog = {
-  get isOn() { return useLogging; },
-  isVisible: () => isVisible(logBox()),
-  on() {
-    useLogging = true;
-    if (!log2Console) {
-      const box = logBox() || createLogElement();
-      box?.parentNode["classList"].add(`visible`);
-    }
-    Log(`Logging started (to ${log2Console ? `console` : `document`})`);
-  },
-  off() {
-    if (logBox()) {
-      Log(`${logTime()} debug logging stopped`);
-      logBox().parentNode.classList.remove(`visible`);
-    }
-    useLogging = false;
-  },
-  toConsole: {
-    on: () => {
-      log2Console = true;
-      useLogging = true;
-    },
-    off() {
-      log2Console = false;
-      useLogging = false;
-    }
-  },
-  remove: () => {
-    useLogging = false;
-    logBox()?.remove();
-  },
-  hide: () => logBox()?.parentNode.classList.remove(`visible`),
-  show: () => logBox()?.parentNode.classList.add(`visible`),
-  reversed(reverse = true) {
-    reverseLogging = reverse;
-    Log(`Reverse logging reset: now logging ${
-      reverse ? `bottom to top (latest first)` : `top to bottom (latest last)`}`);
-  },
-  clear() {
-    const box = logBox();
-    box && (box.textContent = ``);
-    Log(`${logTime()} Logging cleared`);
-  }
-};
 const createLogElement = () => {
   if (logStyling) {
     setStyling4Log(jql.createStyle(`JQLLogCSS`));
@@ -80,11 +35,64 @@ const Log = (...args) => {
     );
 };
 const setSystemLog = {
-  on() { logSystem = true; Log(`System messages are logged`); return logSystem; },
+  on() { logSystem = true; systemLog(`System messages are logged`); return logSystem; },
   off() { logSystem = false; Log(`System messages are NOT logged`); return logSystem; },
 };
-//const setSystemLogActiveState = tf => logSystem = tf;
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
+const debugLog = {
+  get isOn() { return useLogging; },
+  isVisible: () => isVisible(logBox()),
+  on() {
+    useLogging = true;
+    if (!log2Console) {
+      const box = logBox() || createLogElement();
+      box?.parentNode["classList"].add(`visible`);
+    }
+    Log(`${logTime()} logging started (to ${log2Console ? `console` : `document`})`);
+  },
+  off() {
+    if (logBox()) {
+      Log(`${logTime()} debug logging stopped`);
+      logBox().parentNode.classList.remove(`visible`);
+    }
+    useLogging = false;
+  },
+  toConsole: {
+    on: () => {
+      log2Console = true;
+      useLogging = true;
+      Log(`${logTime()} debug logging everything to console`);
+    },
+    off() {
+      log2Console = false;
+      useLogging = false;
+      Log(`${logTime()} debug logging disabled`);
+    }
+  },
+  remove: () => {
+    useLogging = false;
+    logBox()?.remove();
+    Log(`${logTime()} logging completely disabled`);
+  },
+  hide: () => logBox()?.parentNode.classList.remove(`visible`),
+  show: () => logBox()?.parentNode.classList.add(`visible`),
+  reversed: {
+    on: () => {
+      reverseLogging = true;
+      Log(`${logTime()} Reverse logging reset: now logging bottom to top (latest first)`);
+    },
+    off: () => {
+      reverseLogging = false;
+      Log(`${logTime()} Reverse logging reset: now logging top to bottom (latest last)`);
+    },
+  },
+  clear() {
+    const box = logBox();
+    box && (box.textContent = ``);
+    Log(`${logTime()} Logging cleared`);
+  }
+};
+
 
 function setStyling4Log(setStyle) {
   logStyling?.forEach(selector => setStyle(selector));
