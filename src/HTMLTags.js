@@ -6,8 +6,8 @@ export default {
     const tag = allTags[nodeName];
     return !!tag;
   },
-  setTagPermission(tagName, allowed = false) {
-    tagName = tagName.toLowerCase();
-    if (rawTags[tagName]) { rawTags[tagName] = allowed; }
+  setTagPermission({tagName = `none`, allowed = false}) {
+      tagName = tagName.toLowerCase();
+      if (rawTags[tagName]) { rawTags[tagName] = allowed; } ;
   },
 };
