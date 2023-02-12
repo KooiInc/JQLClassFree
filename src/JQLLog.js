@@ -74,7 +74,11 @@ const Log = (...args) => {
           `${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
 };
-const setSystemLogActiveState = tf => logSystem = tf;
+const setSystemLog = {
+  on() { logSystem = true; Log(`System messages are logged`); return logSystem; },
+  off() { logSystem = false; Log(`System messages are NOT logged`); return logSystem; },
+};
+//const setSystemLogActiveState = tf => logSystem = tf;
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 
 function setStyling4Log(setStyle) {
@@ -83,4 +87,4 @@ function setStyling4Log(setStyle) {
 }
 
 
-export { Log, debugLog, setSystemLogActiveState, systemLog };
+export { Log, debugLog, setSystemLog, systemLog };
