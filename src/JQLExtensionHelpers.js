@@ -45,10 +45,10 @@ const inject2DOMTree = (
   collection = [],
   root = document.body,
   position = insertPositions.BeforeEnd ) =>
-  collection.reduce((acc, elem) => {
-    const created = isNode(elem) && element2DOM(elem, root, position);
-    return created ? [...acc, created] : acc;
-  }, []);
+    collection.reduce((acc, elem) => {
+      const created = isNode(elem) && element2DOM(elem, root, position);
+      return created ? [...acc, created] : acc;
+    }, []);
 const addHandlerId = instance => {
   const handleId = instance.first().dataset.hid || `HID${randomString()}`;
   instance.setData({hid: handleId});
