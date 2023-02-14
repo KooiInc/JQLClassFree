@@ -41,7 +41,10 @@ const proxify = instance => {
   const proxyMe = { get: (obj, name) => check(name) ?? (IS(+name, Number) ? obj.collection?.[name] : obj[name]) };
   return new Proxy( instance, proxyMe );
 };
-const inject2DOMTree = (collection = [], root = document.body, position = insertPositions.BeforeEnd) =>
+const inject2DOMTree = (
+  collection = [],
+  root = document.body,
+  position = insertPositions.BeforeEnd ) =>
   collection.reduce((acc, elem) => {
     const created = isNode(elem) && element2DOM(elem, root, position);
     return created ? [...acc, created] : acc;
