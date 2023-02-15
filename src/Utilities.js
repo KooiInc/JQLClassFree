@@ -34,7 +34,7 @@ const IS = (obj, ...shouldBe) => {
   shouldBe = shouldBe.shift();
   const self = obj === 0 ? Number : obj === `` ? String : !obj ? {name: invalid} :
     Object.getPrototypeOf(obj)?.constructor;
-  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self : self?.name ?? invalid;
+  return shouldBe ? shouldBe === self?.__proto__ || shouldBe === self : self?.name;
 };
 const randomString = () => `_${shuffle(characters4RandomString).slice(0, 8).join(``)}`;
 const truncate2SingleStr = (str, maxLength = 120) =>

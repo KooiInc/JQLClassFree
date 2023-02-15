@@ -49,8 +49,8 @@ function JQLFactory() {
     }
 
     if (shouldCreateElements) {
-      [input].flat().forEach(htmlFragment =>
-        instance.collection.push(createElementFromHtmlString(htmlFragment)));
+      [input].flat().forEach(htmlString =>
+        instance.collection.push(createElementFromHtmlString(htmlString)));
     }
 
     if (shouldCreateElements && instance.collection.length > 0) {

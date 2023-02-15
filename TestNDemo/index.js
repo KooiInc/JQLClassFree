@@ -1,4 +1,4 @@
-import $ from "../Bundle/jql.min.js";
+import $ from "../index.js";
 if (location.host.startsWith(`dev`)) {
   document.title += ` DEV`;
 }
@@ -165,19 +165,21 @@ $$(`<div id="helloworld"/>`)
   .find$(`span`)
   .css({className: `okRed`, color: `red`});
 
-// will append comment to p#JQLRoot
-$(`<!--Hi, I am a multiline HTML-comment.
+// append multiline comment to p#JQLRoot
+$$(`<!--Hi, I am a multiline HTML-comment.
      So, you can add plain comments using JQL
      A comment may be injected into a child 
      element (using the [root] parameter
-     combined with a position-->`,
-  JQLRoot,
-  $.insertPositions.BeforeEnd);
+     combined with a position-->`).appendTo(JQLRoot),
+
 
 // a comment can also be appended using append/appendTo/prepend/prependTo
 $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
 $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
+// comment test
+$(`<!--hithere beforebegin (#JQLRoot) -->`, JQLRoot, `beforebegin`);
+$(`<!--hithere afterend #bttnblock-->`, $(`#bttnblock`), `afterend`);
 
 // display code of this file
 // -------------------------

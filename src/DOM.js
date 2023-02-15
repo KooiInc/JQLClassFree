@@ -16,22 +16,23 @@ const htmlToVirtualElement = htmlString => {
     ? cleanupHtml(placeholderNode)
     : undefined;
 };
+const characterDataElement2Dom = (elem, root, position) => {
+  switch(position) {
+    case insertPositions.BeforeBegin: root.parentElement?.append(elem); break;
+    case insertPositions.AfterBegin: root.insertBefore(elem, root.firstElementChild); break;
+    case insertPositions.AfterEnd: root.parentNode?.insertBefore(elem, root.nextElementSibling); break;
+    default: root.append(elem);
+  }
+}
 const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {
-  root = root.isJQL ? root.first() : root;
-  if (elem) {
-    if (IS(elem, HTMLElement)) {
-      return root.insertAdjacentElement(position, elem);
-    }
+  root = root.isJQL ? root[0] : root;
 
-    if (IS(elem, Comment, Text)) {
-      if (position === insertPositions.BeforeEnd) {
-        root.appendChild(elem);
-      }
+  if (IS(elem, Comment)) {
+    return characterDataElement2Dom(elem, root, position);
+  }
 
-      if (position === insertPositions.AfterBegin) {
-        root.insertBefore(elem, root.firstElementChild);
-      }
-    }
+  if (IS(elem, HTMLElement)) {
+    return root.insertAdjacentElement(position, elem);
   }
 };
 const createElementFromHtmlString = htmlStr => {
