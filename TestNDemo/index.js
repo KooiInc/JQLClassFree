@@ -177,9 +177,9 @@ $$(`<!--Hi, I am a multiline HTML-comment.
 $$(`<!--I was appended to div#JQLRoot using .appendTo-->`).appendTo(JQLRoot);
 $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 
-// comment test
-$(`<!--hithere beforebegin (#JQLRoot) -->`, JQLRoot, `beforebegin`);
-$(`<!--hithere afterend #bttnblock-->`, $(`#bttnblock`), `afterend`);
+// comment insertion test
+$(`<!--Comment @ #JQLRoot beforebegin (verify it in DOM tree)-->`, JQLRoot, `beforebegin`);
+$(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), `afterend`);
 
 // display code of this file
 // -------------------------
