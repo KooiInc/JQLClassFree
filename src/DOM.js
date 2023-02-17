@@ -21,7 +21,7 @@ const characterDataElement2DOM = (elem, root, position) => {
     case insertPositions.BeforeBegin: root.parentElement?.insertBefore(elem, root); break;
     case insertPositions.AfterBegin: root.insertBefore(elem, root.firstElementChild); break;
     case insertPositions.AfterEnd: root.parentElement?.insertBefore(elem, root.nextElementSibling); break;
-    default: root.appendChild(elem);
+    default: root.appendChild(elem); break;
   }
 }
 const element2DOM = (elem, root = document.body, position = insertPositions.BeforeEnd) => {

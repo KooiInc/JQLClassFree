@@ -180,6 +180,7 @@ $$(`<!--I was PREpended to div#JQLRoot using .prependTo-->`).prependTo(JQLRoot);
 // comment insertion test
 $(`<!--Comment @ #JQLRoot beforebegin (verify it in DOM tree)-->`, JQLRoot, `beforebegin`);
 $(`<!--Comment @ #bttnblock afterend (verify it in DOM tree) -->`, $(`#bttnblock`), `afterend`);
+$(`<!--Comment @ #bttnblock afterbegin (verify it in DOM tree) -->`, $(`#bttnblock`), `afterbegin`);
 
 // display code of this file
 // -------------------------

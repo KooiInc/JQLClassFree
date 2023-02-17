@@ -78,8 +78,8 @@ const defaultStaticMethods = {
   log: Log,
   insertPositions,
   text: (str, isComment = false) => isComment ? document.createComment(str) : document.createTextNode(str),
-  node: (selector, root = document.body) => document.querySelector(selector, root),
-  nodes: (selector, root = document.body) => document.querySelectorAll(selector, root),
+  node: (selector, root = document.body) => root.querySelector(selector, root),
+  nodes: (selector, root = document.body) => [...root.querySelectorAll(selector, root)],
 };
 const addJQLStatics = $ => {
   const virtual = html => $(html, document.createElement("br"));
