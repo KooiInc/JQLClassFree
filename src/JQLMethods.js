@@ -12,7 +12,7 @@ import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
 
 const empty = el => el && (el.textContent = "");
-const compareCaseInsensitive = (key, compareTo) => key.toLowerCase().trim() === compareTo;
+const compareCI = (key, compareTo) => key.toLowerCase().trim() === compareTo.trim().toLowerCase();
 const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
@@ -43,11 +43,11 @@ const assignAttrValues = (el, keyValuePairs) => {
       setData(el, {[key]: value});
     }
 
-    if (compareCaseInsensitive(key, `class`)) {
+    if (compareCI(key, `class`)) {
       value.split(/\s+/).forEach(v => el.classList.add(`${v}`))
     }
 
-    if (IS(value, String)) {
+    if (IS(value, String) && checkProp(key)) {
       el[key] = value;
     }
   });
@@ -103,11 +103,11 @@ const allMethods = {
       Object.entries(keyOrObj).forEach(([key, value]) => {
         if (!checkProp(key)) { return false; }
 
-        if (compareCaseInsensitive(key, `style`)) {
+        if (compareCI(key, `style`)) {
           return css(el, value, undefined);
         }
 
-        if (compareCaseInsensitive(key, `data`)) {
+        if (compareCI(key, `data`)) {
           return setData(el, value);
         }
 
