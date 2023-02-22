@@ -92,7 +92,7 @@ const allMethods = {
         return true;
       }
 
-      if (value !== undefined) {
+      if (IS(keyOrObj, String) && value !== undefined) {
         keyOrObj = { [keyOrObj]: value };
       }
 
