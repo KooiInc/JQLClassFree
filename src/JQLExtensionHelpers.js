@@ -81,6 +81,7 @@ const defaultStaticMethods = {
   node: (selector, root = document.body) => root.querySelector(selector, root),
   nodes: (selector, root = document.body) => [...root.querySelectorAll(selector, root)],
 };
+let static4Docs;
 const addJQLStatics = $ => {
   const virtual = html => $(html, document.createElement("br"));
   const setStyle = styleFactory( { createWithId: `JQLStylesheet` } );
@@ -109,6 +110,7 @@ const addJQLStatics = $ => {
     },
   };
   Object.entries(staticMethods).forEach(([name, method]) => $[name] = method);
+  static4Docs = staticMethods;
   return $;
 };
 
@@ -137,4 +139,5 @@ export {
   insertPositions,
   systemLog,
   IS,
+  static4Docs,
 };

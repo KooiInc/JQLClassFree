@@ -8,6 +8,7 @@ import {
   isNode,
   randomString,
   inject2DOMTree } from "./JQLExtensionHelpers.js";
+import {ATTRS} from "./EmbedResources.js";
 import jql from "../index.js";
 
 const empty = el => el && (el.textContent = "");
@@ -16,6 +17,7 @@ const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
 };
+const checkProp = prop => ATTRS.find(attr => prop === attr);
 
 const css = (el, keyOrKvPairs, value) => {
   const { setStyle } = jql;
@@ -73,7 +75,7 @@ const allMethods = {
         ? el.removeAttribute(name)
         : el.setAttribute(name, value),
     empty,
-    clear: empty,
+    clear:  empty,
     replaceClass: (el, className, ...nwClassNames) => {
       el.classList.remove(className);
       nwClassNames.forEach(name => el.classList.add(name))
@@ -83,8 +85,8 @@ const allMethods = {
     addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
     show: el => el.style.display = ``,
     hide: el => el.style.display = `none`,
-    setData,
-    assignAttrValues,
+    setData: setData,
+    assignAttrValues: assignAttrValues,
     attr(el, keyOrObj, value) {
       if (!el) {
         return true;
@@ -99,6 +101,8 @@ const allMethods = {
       }
 
       Object.entries(keyOrObj).forEach(([key, value]) => {
+        if (!checkProp(key)) { return false; }
+
         if (compareCaseInsensitive(key, `style`)) {
           return css(el, value, undefined);
         }
@@ -126,7 +130,7 @@ const allMethods = {
     css,
   },
   instanceExtensions: {
-    text: (self, textValue, append) => {
+    text: (self, textValue, append = false) => {
       if (self.isEmpty()) {
         return self;
       }
@@ -151,7 +155,7 @@ const allMethods = {
     },
     computedStyle: (self, property) => self.first() && getComputedStyle(self.first())[property],
     getData: (self, dataAttribute, valueWhenFalsy) => self.first() &&
-      self.first().dataset && self.first().dataset[dataAttribute] || valueWhenFalsy,
+      self.first().dataset?.[dataAttribute] || valueWhenFalsy,
     isEmpty: self => self.collection.length < 1,
     is: (self, checkValue) => {
       const firstElem = self.first();
@@ -201,7 +205,7 @@ const allMethods = {
     replaceMe: (self, newChild) => {
       newChild = IS(newChild, HTMLElement) ? jql(newChild) : newChild;
       self.parent().replace(self, newChild)
-      return newChild;
+      return jql(newChild);
     },
     val: (self, newValue) => {
       const firstElem = self.first();
@@ -346,6 +350,10 @@ const allMethods = {
       return found.length && jql(found[0]) || jql();
     },
     prop: (self, property, value) => {
+      if (value && !checkProp(property)) {
+        return self;
+      }
+
       if (!value) {
         return self.collection.length ? self.first()[property] : self;
       }
