@@ -55,7 +55,7 @@ const assignAttrValues = (el, keyValuePairs) => {
 const allMethods = {
   straigthLoops: {
     toggleClass: (el, className) => el.classList.toggle(className),
-    toggleStyleFragments: (el, keyValuePairs) =>
+    toggleStyleFragments: (/*NODOC*/ el, keyValuePairs) =>
       el && Object.entries(keyValuePairs).forEach(([key, value]) => {
         if (IS(value, Function)) {
           value = value(el);
@@ -237,7 +237,10 @@ const allMethods = {
     parent: self => self.collection.length && self.first().parentNode &&
       jql(self.first().parentNode) || self,
     append: (self, ...elems2Append) => {
-      if (self.collection.length && elems2Append.length) {
+      if (elems2Append.length) {
+        if (self.isEmpty()) {
+          self.collection.push(createElementFromHtmlString(`<div>`));
+        }
 
         for (let i = 0; i < elems2Append.length; i += 1) {
           const elem = elems2Append[i];
