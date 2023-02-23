@@ -70,10 +70,12 @@ const allMethods = {
         el.style[key] = `${el.style[key]}` === `${value}` ? "" : value;
       }),
     removeAttr: (el, name) => el && el.removeAttribute(name),
-    toggleAttr: (el, name, value) =>
-      el && el.hasAttribute(name)
-        ? el.removeAttribute(name)
-        : el.setAttribute(name, value),
+    toggleAttr: (el, name, value) => {
+      if (el && el.hasAttribute(name)) {
+         return el.removeAttribute(name);
+      }
+      el.setAttribute(name, value);
+    },
     empty,
     clear:  empty,
     replaceClass: (el, className, ...nwClassNames) => {
@@ -83,7 +85,11 @@ const allMethods = {
     removeClass: (el, ...classNames) =>
       classNames.forEach(cn => el.classList.remove(cn)),
     addClass: (el, ...classNames) => el && classNames.forEach(cn => el.classList.add(cn)),
-    show: el => el.style.display = ``,
+    show: el => {
+      el.style.display = ``;
+      el.style.visibility = ``;
+      el.style.opacity = `1`;
+    },
     hide: el => el.style.display = `none`,
     setData: setData,
     assignAttrValues: assignAttrValues,
