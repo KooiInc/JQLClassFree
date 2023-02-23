@@ -74,8 +74,11 @@ const allMethods = {
       if (el.hasAttribute(name)) {
         if (!el.dataset[`previous${name}`]) {
           el.dataset[`previous${name}`] = el.getAttribute(name);
-          return el.removeAttribute(name);
         }
+        return el.removeAttribute(name);
+      }
+
+      if (el.dataset[`previous${name}`]) {
         return el.setAttribute(name, el.dataset[`previous${name}`]);
       }
     },
