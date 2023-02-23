@@ -70,11 +70,14 @@ const allMethods = {
         el.style[key] = `${el.style[key]}` === `${value}` ? "" : value;
       }),
     removeAttr: (el, name) => el && el.removeAttribute(name),
-    toggleAttr: (el, name, value) => {
-      if (el && el.hasAttribute(name) && !value) {
-        return el.removeAttribute(name);
+    toggleAttr: (el, name) => {
+      if (el.hasAttribute(name)) {
+        if (!el.dataset[`previous${name}`]) {
+          el.dataset[`previous${name}`] = el.getAttribute(name);
+          return el.removeAttribute(name);
+        }
+        return el.setAttribute(name, el.dataset[`previous${name}`]);
       }
-      el.setAttribute(name, value);
     },
     empty,
     clear:  empty,
