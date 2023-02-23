@@ -71,8 +71,8 @@ const allMethods = {
       }),
     removeAttr: (el, name) => el && el.removeAttribute(name),
     toggleAttr: (el, name, value) => {
-      if (el && el.hasAttribute(name)) {
-         return el.removeAttribute(name);
+      if (el && el.hasAttribute(name) && !value) {
+        return el.removeAttribute(name);
       }
       el.setAttribute(name, value);
     },
