@@ -1,8 +1,8 @@
 import {IS} from "./JQLExtensionHelpers.js";
 import {popupStyling} from "./EmbedResources.js";
-export default popupFactory;
+export default PopupFactory;
 
-function popupFactory($) {
+function PopupFactory($) {
   const wrappedBody = $(document.body);
   const setStyle = $.createStyle(`JQLPopupCSS`);
   initStyling(setStyle);
@@ -61,7 +61,7 @@ function popupFactory($) {
     $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
-  const create = (message, reallyModal = false, callback = undefined) =>
+  const create = (message, /*NOPARAMDOC*/reallyModal = false, callback = undefined) =>
     !currentModalState.isActive && doCreate({message, reallyModal, callback});
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isActive) { return; }
@@ -70,7 +70,7 @@ function popupFactory($) {
     const remover = callback ? () => remove(callback) : remove;
     savedTimer = setTimeout(remover, closeAfter * 1000);
   };
-  function remove(evtOrCallback) {
+  function remove(/*NODOC*/evtOrCallback) {
     endTimer();
 
     if (currentModalState.isActive) { return; }

@@ -1,7 +1,7 @@
 import { createElementFromHtmlString, element2DOM, insertPositions } from "./DOM.js";
 import { debugLog, Log, systemLog } from "./JQLLog.js";
 import allMethods from "./JQLMethods.js";
-import popupFactory from "./Popup.js";
+import PopupFactory from "./Popup.js";
 import HandleFactory from "./HandlerFactory.js";
 import styleFactory from "../LifeCSS/index.js";
 import { randomString, toDashedNotation, IS, truncateHtmlStr,
@@ -100,7 +100,7 @@ const addJQLStatics = $ => {
     createStyle,
     virtual,
     handle,
-    popup: () => popupFactory($),
+    popup: () => PopupFactory($),
     delegate: (type, origin, ...handlers) => {
       if (IS(origin, Function)) {
         handlers.push(origin);

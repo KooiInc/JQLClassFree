@@ -10,7 +10,8 @@ export default $ => {
   };
 
   const addListenerIfNotExisting = type =>
-    !Object.keys(handlers).find(registeredType => registeredType === type) && document.addEventListener(type, metaHandler);
+    !Object.keys(handlers).find(registeredType => registeredType === type) &&
+      document.addEventListener(type, metaHandler);
 
   return (extCollection, type, HIDselector, callback) => {
     addListenerIfNotExisting(type);

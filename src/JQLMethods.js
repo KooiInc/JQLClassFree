@@ -17,7 +17,7 @@ const setData = (el, keyValuePairs) => {
   el && IS(keyValuePairs, Object) &&
   Object.entries(keyValuePairs).forEach(([key, value]) => el.dataset[key] = value);
 };
-const checkProp = prop => ATTRS.find(attr => prop === attr);
+const checkProp = prop => ATTRS.html.find(attr => prop === attr);
 
 const css = (el, keyOrKvPairs, value) => {
   const { setStyle } = jql;
