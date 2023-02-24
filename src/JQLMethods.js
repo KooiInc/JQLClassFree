@@ -334,7 +334,7 @@ const allMethods = {
     },
     duplicate: (self, toDOM = false) => {
       const clonedCollection = self.toNodeList();
-      return toDOM ? jql(clonedCollection) : self.virtual(clonedCollection);
+      return toDOM ? jql(clonedCollection) : jql.virtual(clonedCollection);
     },
     toDOM: (self, root = document.body, position = insertPositions.BeforeEnd) => {
       if (self.isVirtual) {
@@ -419,7 +419,7 @@ const allMethods = {
       return self;
     },
     dimensions: self => self.first()?.getBoundingClientRect(),
-    delegate: (self, type, cssSelector, ...callbacks) => {
+    delegate: (/*NODOC*/self, type, cssSelector, ...callbacks) => {
       callbacks.forEach(callback => jql.handle(self, type, cssSelector, callback));
       return self;
     },
