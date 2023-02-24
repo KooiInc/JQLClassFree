@@ -61,8 +61,8 @@ function PopupFactory($) {
     $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
-  const create = (message, /*NOPARAMDOC*/reallyModal = false, callback = undefined) =>
-    !currentModalState.isActive && doCreate({message, reallyModal, callback});
+  const create = (message, isModal = false, callback = undefined) =>
+    !currentModalState.isActive && doCreate({message, reallyModal: isModal, callback});
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isActive) { return; }
     deActivate();

@@ -237,11 +237,7 @@ const allMethods = {
     parent: self => self.collection.length && self.first().parentNode &&
       jql(self.first().parentNode) || self,
     append: (self, ...elems2Append) => {
-      if (elems2Append.length) {
-        if (self.isEmpty()) {
-          self.collection.push(createElementFromHtmlString(`<div>`));
-        }
-
+      if (!self.isEmpty() && elems2Append.length) {
         for (let i = 0; i < elems2Append.length; i += 1) {
           const elem = elems2Append[i];
           if (IS(elem, String)) {
@@ -299,18 +295,18 @@ const allMethods = {
 
       return self;
     },
-    appendTo: (self, self2AppendTo) => {
-      if (!self2AppendTo.isJQL) {
-        self2AppendTo = self.virtual(self2AppendTo);
+    appendTo: (self, appendTo) => {
+      if (!appendTo.isJQL) {
+        appendTo = self.virtual(appendTo);
       }
-      return self2AppendTo.append(self);
+      return appendTo.append(self);
     },
-    prependTo: (self, self2PrependTo) => {
-      if (!self2PrependTo.isJQL) {
-        self2PrependTo = self.virtual(self2PrependTo);
+    prependTo: (self, prependTo) => {
+      if (!prependTo.isJQL) {
+        prependTo = self.virtual(prependTo);
       }
 
-      return self2PrependTo.prepend(self);
+      return prependTo.prepend(self);
     },
     single: (self, indexOrSelector = "0") => {
       if (self.collection.length > 0) {
