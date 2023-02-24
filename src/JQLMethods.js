@@ -247,7 +247,7 @@ const allMethods = {
 
           if (isNode(elems2Append[i])) {
             self.collection.forEach(el =>
-              el.appendChild(is(elem, Comment) ? elem : elem.cloneNode(true)));
+              el.appendChild(IS(elem, Comment) ? elem : elem.cloneNode(true)));
             return self;
           }
 
