@@ -9,7 +9,7 @@ const insertPositions = {
   AfterBegin: "afterbegin",
   BeforeEnd: "beforeend",
   AfterEnd: "afterend" };
-const placeholderNode = document.createElement("p");
+const placeholderNode = document.createElement("div");
 const htmlToVirtualElement = htmlString => {
   placeholderNode.innerHTML = htmlString.trim();
   return placeholderNode.childNodes.length
