@@ -93,8 +93,14 @@ debugLog = {...debugLog,
     Log(...args);
     return debugLog;
   },
-  hide: () => jql(logBoxId)?.parent()?.removeClass(`visible`),
-  show: () => jql(logBoxId)?.parent()?.addClass(`visible`),
+  hide: () => {
+    jql(logBoxId)?.parent()?.removeClass(`visible`);
+    return debugLog;
+  },
+  show: () => {
+    jql(logBoxId)?.parent()?.addClass(`visible`);
+    return debugLog;
+  },
   reversed: {
     on: () => {
       reverseLogging = true;
