@@ -7,10 +7,8 @@ let useLogging = false;
 let log2Console = true;
 let reverseLogging = false;
 let useHtml = true;
-const setStyling4Log = setStyle => {
-  logStyling?.forEach(selector => setStyle(selector));
-};
-let logBox = () => document.querySelector(`#jql_logger`);
+const logBoxId = `#jql_logger`;
+const setStyling4Log = setStyle => { logStyling?.forEach(selector => setStyle(selector)); };
 const createLogElement = () => {
   if (logStyling) {
     setStyling4Log(jql.createStyle(`JQLLogCSS`));
@@ -19,20 +17,20 @@ const createLogElement = () => {
   const loggingFieldSet = `<div id="logBox"><div class="legend"><div></div></div><${
     jql_logger_element_name} id="jql_logger"></${jql_logger_element_name}></div>`;
   element2DOM(createElementFromHtmlString(loggingFieldSet), undefined, insertPositions.AfterBegin);
-  return document.querySelector(`#jql_logger`);
+  return jql.node(logBoxId);
 };
 const decodeForConsole = something => IS(something, String) &&
   Object.assign(document.createElement(`textarea`), {innerHTML: something}).textContent ||
   something;
 const Log = (...args) => {
     if (!useLogging) { return; }
-    if (!log2Console && !logBox()) {
+    if (!log2Console && !jql.node(`#jql_logger`)) {
       createLogElement();
     }
     const logLine = arg => `${IS(arg, Object) ? JSON.stringify(arg, null, 2) : arg}\n`;
     args.forEach( arg => log2Console
       ? console.log(decodeForConsole(arg))
-      : logBox().insertAdjacentHTML(
+      : jql.node(`#jql_logger`).insertAdjacentHTML(
           reverseLogging ? `afterbegin` : `beforeend`,
           `${logTime()} ${logLine(arg.replace(/\n/g, `<br>`))}`)
     );
@@ -46,14 +44,15 @@ const setSystemLog = {
   off() { logSystem = false; },
 };
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
-const debugLog = {
+let debugLog = {};
+debugLog = {...debugLog,
   isOn: () => useLogging,
-  isVisible: () => isVisible(logBox()),
+  isVisible: () => jql(`#jql_logger`).is(`:visible`), //isVisible(logBox()),
   on: () => {
     logActive.on();
     setSystemLog.on();
     if (!log2Console) {
-      const box = logBox() || createLogElement();
+      const box = jql.node(logBoxId) || createLogElement();
       box?.parentNode["classList"].add(`visible`);
     }
     Log(`Debug logging started. Every call to [jql instance] is logged (${
@@ -61,10 +60,11 @@ const debugLog = {
     return debugLog;
   },
   off: () => {
-    if (logBox()) {
+    const logBox = jql(logBoxId);
+    if (!logBox.isEmpty) {
       setSystemLog.off();
       Log(`Debug logging stopped`);
-      logBox().parentNode.classList.remove(`visible`);
+      logBox.parent().removeClass(`visible`);
     }
     logActive.off();
     return debugLog;
@@ -84,13 +84,17 @@ const debugLog = {
   remove: () => {
     logActive.off();
     setSystemLog.off();
-    logBox()?.remove();
+    jql(logBoxId)?.remove();
     console?.clear();
     console.log(`${logTime()} logging completely disabled and all entries removed`);
     return debugLog;
   },
-  hide: () => logBox()?.parentNode.classList.remove(`visible`),
-  show: () => logBox()?.parentNode.classList.add(`visible`),
+  log: (...args) => {
+    Log(...args);
+    return debugLog;
+  },
+  hide: () => jql(logBoxId)?.parent()?.removeClass(`visible`),
+  show: () => jql(logBoxId)?.parent()?.addClass(`visible`),
   reversed: {
     on: () => {
       reverseLogging = true;
@@ -104,7 +108,7 @@ const debugLog = {
     },
   },
   clear: () => {
-    jql(`#jql_logger`)?.text(``);
+    jql(logBoxId)?.text(``);
     console.clear();
     Log(`Logging cleared`);
     return debugLog;
