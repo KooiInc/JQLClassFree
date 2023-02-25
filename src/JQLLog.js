@@ -4,8 +4,8 @@ import {IS, logTime, isVisible} from "./JQLExtensionHelpers.js";
 import {logStyling} from "./EmbedResources.js";
 let logSystem = false;
 let useLogging = false;
-let log2Console = false;
-let reverseLogging = true;
+let log2Console = true;
+let reverseLogging = false;
 let useHtml = true;
 const setStyling4Log = setStyle => {
   logStyling?.forEach(selector => setStyle(selector));
@@ -47,41 +47,47 @@ const setSystemLog = {
 };
 const systemLog = (...logTxt) => logSystem && Log(...logTxt);
 const debugLog = {
-  get isOn() { return useLogging; },
+  isOn: () => useLogging,
   isVisible: () => isVisible(logBox()),
-  on() {
-    useLogging = true;
+  on: () => {
+    logActive.on();
     setSystemLog.on();
     if (!log2Console) {
       const box = logBox() || createLogElement();
       box?.parentNode["classList"].add(`visible`);
     }
-    Log(`Debug logging started (to ${log2Console ? `console` : `document`}). All calls to [jql instance] are logged.`);
+    Log(`Debug logging started. Every call to [jql instance] is logged (${
+      reverseLogging ? `ascending: latest last` : `descending: latest first`}).`);
+    return debugLog;
   },
-  off() {
+  off: () => {
     if (logBox()) {
       setSystemLog.off();
       Log(`Debug logging stopped`);
       logBox().parentNode.classList.remove(`visible`);
     }
-    useLogging = false;
+    logActive.off();
+    return debugLog;
   },
   toConsole: {
     on: () => {
       log2Console = true;
-      useLogging = true;
-      Log(`Debug logging everything to console`);
+      Log(`Debug logging to console activated`);
+      return debugLog;
     },
     off() {
       log2Console = false;
-      useLogging = false;
-      Log(`Debug logging disabled`);
+      Log(`Debug logging to document activated`);
+      return debugLog;
     }
   },
   remove: () => {
-    useLogging = false;
+    logActive.off();
+    setSystemLog.off();
     logBox()?.remove();
-    Log(`${logTime()} logging completely disabled`);
+    console?.clear();
+    console.log(`${logTime()} logging completely disabled and all entries removed`);
+    return debugLog;
   },
   hide: () => logBox()?.parentNode.classList.remove(`visible`),
   show: () => logBox()?.parentNode.classList.add(`visible`),
@@ -89,18 +95,20 @@ const debugLog = {
     on: () => {
       reverseLogging = true;
       Log(`Reverse logging reset: now logging bottom to top (latest first)`);
+      return debugLog;
     },
     off: () => {
       reverseLogging = false;
       Log(`Reverse logging reset: now logging top to bottom (latest last)`);
+      return debugLog;
     },
   },
-  clear() {
-    const box = logBox();
-    box && (box.textContent = ``);
-    Log(`${logTime()} Logging cleared`);
+  clear: () => {
+    jql(`#jql_logger`)?.text(``);
+    console.clear();
+    Log(`Logging cleared`);
+    return debugLog;
   }
 };
-
 
 export { Log, debugLog, systemLog };

@@ -9,9 +9,7 @@ const popup = $.popup();
 const repeat = (str, n) => n > 0 ? Array(n).fill(str).join('') : str;
 
 // activate logging all JQL events (hidden)
-debugLog.on();
-debugLog.reversed.off();
-debugLog.hide();
+debugLog.on().toConsole.off().hide();
 const apiLinkPrefix = `https://kooiinc.github.io/JQLDoc/`;
 
 // Some methods used in handler delegates
