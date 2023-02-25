@@ -149,7 +149,7 @@ const allMethods = {
 
       const cb = el => el.textContent = append ? el.textContent + textValue : textValue;
 
-      if (!textValue) {
+      if (!IS(textValue, String)) {
         return self.first().textContent;
       }
 
