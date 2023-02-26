@@ -13,7 +13,7 @@ export default $ => {
     !Object.keys(handlers).find(registeredType => registeredType === type) &&
       document.addEventListener(type, metaHandler);
 
-  return (extCollection, type, HIDselector, callback) => {
+  return (/*NODOC*/self, type, HIDselector, callback) => {
     addListenerIfNotExisting(type);
     const fn = !HIDselector ? callback : createHandlerForHID(HIDselector, callback);
     handlers = handlers[type]

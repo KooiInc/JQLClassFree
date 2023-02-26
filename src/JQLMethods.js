@@ -265,6 +265,7 @@ const allMethods = {
       return self;
     },
     prepend: (self, ...elems2Prepend) => {
+      // todo: maybe better to only prepend to root element!
       if (!self.isEmpty() && elems2Prepend) {
 
         for (let i = 0; i < elems2Prepend.length; i += 1) {
