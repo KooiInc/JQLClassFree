@@ -3,6 +3,7 @@ import {popupStyling} from "./EmbedResources.js";
 export default PopupFactory;
 
 function PopupFactory($) {
+  let savedPosition = 0;
   const wrappedBody = $(document.body);
   const setStyle = $.createStyle(`JQLPopupCSS`);
   initStyling(setStyle);
@@ -41,8 +42,10 @@ function PopupFactory($) {
   };
   const activate = (theBox, closeHndl) => {
     $(`.between, .popupContainer`).addClass(`active`);
-    popupBox.style( { height: `auto`, width: `auto` } );
-    between.style( { top: `${scrollY}px` } );
+    const scrTop = $(`html`)[0].scrollTop;
+    between.style( { top: `${scrTop}px` } );
+    const boxTop = scrTop + (0.5 * between[0].offsetHeight);
+    popupBox.style( { height: `auto`, width: `auto`, top: `${ boxTop }px` } );
     wrappedBody.addClass(`popupActive`);
 
     if (closeHndl) {
@@ -67,14 +70,12 @@ function PopupFactory($) {
     if (currentModalState.isActive) { return; }
     deActivate();
     create(message, false, callback);
-    const remover = callback ? () => remove(callback) : remove;
+    const remover = () => remove(callback);
     savedTimer = setTimeout(remover, closeAfter * 1000);
   };
   function remove(/*NODOC*/evtOrCallback) {
     endTimer();
-
     if (currentModalState.isActive) { return; }
-
     const callback = IS(evtOrCallback, Function) ? evtOrCallback : savedCallback;
 
     if (IS(callback, Function)) {
