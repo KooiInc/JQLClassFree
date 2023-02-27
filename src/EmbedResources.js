@@ -41,7 +41,7 @@ function getPopupStyling() {
     "@media screen and (width < 1200px){.popupContainer{max-width:75vw;max-height:40vh;}}",
     "@media screen and (width < 640px){.popupContainer{max-width:90vw;max-height:60vh;}}",
     "#modalWarning{color:red;background-color:rgb(255, 255, 240);font-weight:bold;border:3px solid red;padding:1rem;margin:0px auto 0.5em;text-align:center;opacity:0;max-height:0px;position:absolute;box-shadow:rgb(153, 153, 153) 2px 2px 8px;transition:all 0.5s ease 0s;top:50%;left:50%;transform:translate(-50%, -50%);}",
-    "#modalWarning.active:after{content:'Please close this box first!';}",
+    "#modalWarning.active:after{content:'Requires action first!';}",
     "#modalWarning.active{opacity:1;max-height:100%;max-width:100%;height:auto;z-index:12;}",
     `.closeHandleIcon{opacity:0;z-index:-1;cursor:pointer;width:32px;height:32px;background:${svgImg} no-repeat;}`,
     ".closeHandleIcon.active{z-index:12;opacity:1;position:absolute;margin-right:-16px;margin-top:-16px;};"

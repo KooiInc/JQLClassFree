@@ -53,9 +53,13 @@ function PopupFactory($) {
     }
   };
   const endTimer = () => savedTimer && clearTimeout(savedTimer);
-  const doCreate = ({message, reallyModal, callback}) => {
-    currentModalState.isModal = {state: reallyModal};
+  const doCreate = ({message, isModal, callback, modalWarning}) => {
+    currentModalState.isModal = {state: isModal};
     savedCallback = callback;
+
+    if (isModal && IS(modalWarning, String)) {
+      setStyle(`#modalWarning.active:after{content:"${modalWarning}";}`);
+    }
 
     if (!message.isJQL && !IS(message, String)) {
       return createTimed($(`<b style="color:red">Popup not created: invalid input</b>`), 2);    }
@@ -64,8 +68,8 @@ function PopupFactory($) {
     $(`.popupBox > [data-modalcontent]`).empty().append( message.isJQL ? message : $(`<div>${message}</div>`) );
     activate(popupBox, currentModalState.isModal ? undefined : closer);
   }
-  const create = (message, isModal = false, callback = undefined) =>
-    !currentModalState.isActive && doCreate({message, reallyModal: isModal, callback});
+  const create = (message, isModal = false, callback = undefined, modalWarning = ``) =>
+    !currentModalState.isActive && doCreate({message, isModal, callback, modalWarning});
   const createTimed = (message, closeAfter = 2, callback = null ) => {
     if (currentModalState.isActive) { return; }
     deActivate();
