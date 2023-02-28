@@ -322,7 +322,7 @@ const allMethods = {
     toNodeList: self => {
       const virtual = document.createElement(`div`);
 
-      for (let elem of self.collection) {
+      for (const elem of self.collection) {
         const nodeClone = document.importNode(elem, true);
         nodeClone.removeAttribute(`id`);
         virtual.append(nodeClone);
