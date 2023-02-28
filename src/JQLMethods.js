@@ -238,21 +238,18 @@ const allMethods = {
       jql(self.first().parentNode) || self,
     append: (self, ...elems2Append) => {
       if (!self.isEmpty() && elems2Append.length) {
-        for (let i = 0; i < elems2Append.length; i += 1) {
-          const elem = elems2Append[i];
+        for (const elem of elems2Append) {
           if (IS(elem, String)) {
             self.collection.forEach(el => el.appendChild(createElementFromHtmlString(elem)));
-            return self;
           }
 
-          if (isNode(elems2Append[i])) {
-            self.collection.forEach(el =>
+          if (isNode(elem)) {
+            self.collection.forEach( el =>
               el.appendChild(IS(elem, Comment) ? elem : elem.cloneNode(true)));
-            return self;
           }
 
-          if (elems2Append[i].isJQL && elems2Append[i].collection.length) {
-            if (elems2Append[i].isVirtual) { elem.toDOM(); }
+          if (elem.isJQL && elem.collection.length) {
+            if (elem.isVirtual) { elem.toDOM(); }
             const elems = elem.collection;
             elem.remove();
             elems.forEach( e2a =>
